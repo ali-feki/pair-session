@@ -4,59 +4,406 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ALI-MD - Advanced WhatsApp Bot Pairing Platform</title>
-    <link rel="icon" href="https://files.catbox.moe/e5b2az.jpg" type="image/png">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="https://files.catbox.moe/c30xpp.jpg" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ========== ROOT & BASE ========== */
+        :root {
+            --sky: #0ea5e9;
+            --cobalt: #2563eb;
+            --cyan: #22d3ee;
+            --gold: #fbbf24;
+            --bg-dark: #05030f;
+            --bg-card: rgba(255,255,255,0.035);
+            --border: rgba(255,255,255,0.08);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* ========== AURORA BACKGROUND ========== */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(236,72,153,0.15), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(168,85,247,0.15), transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(34,211,238,0.08), transparent 50%);
+            filter: blur(80px);
+            z-index: 0;
+            pointer-events: none;
+            animation: auroraShift 25s ease infinite;
+        }
+        @keyframes auroraShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.15) rotate(5deg); }
+        }
+
+        /* ========== GRID ========== */
+        .grid-background {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(236,72,153,0.055) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(236,72,153,0.055) 1px, transparent 1px);
+            background-size: 55px 55px;
+            mask-image: radial-gradient(ellipse 85% 65% at 50% 45%, black 35%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 45%, black 35%, transparent 100%);
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar-premium {
+            background: rgba(5,3,15,0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+        .navbar-premium.scrolled {
+            background: rgba(5,3,15,0.9);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .nav-link-premium {
+            position: relative;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .nav-link-premium::after {
+            content: '';
+            position: absolute;
+            bottom: -6px; left: 0;
+            width: 0; height: 2px;
+            background: linear-gradient(90deg, #ec4899, #a855f7);
+            transition: width 0.3s ease;
+        }
+        .nav-link-premium:hover { color: white !important; }
+        .nav-link-premium:hover::after { width: 100%; }
+
+        /* ========== HERO TITLE GRADIENT ========== */
+        .hero-title-gradient {
+            background: linear-gradient(135deg, #ec4899 0%, #a855f7 50%, #22d3ee 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 6s ease infinite;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* ========== VIDEO HERO ========== */
+        .video-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(236,72,153,0.25);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 80px rgba(236,72,153,0.15);
+            position: relative;
+        }
+        .hero-video {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* ========== FADE ANIMATIONS ========== */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(24px);
+            animation: fadeInUp 0.7s cubic-bezier(0.4,0,0.2,1) forwards;
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn-glow {
+            background: linear-gradient(135deg, #ec4899, #a855f7);
+            background-size: 200% 200%;
+            animation: gradientShift 5s ease infinite;
+            box-shadow: 0 10px 30px rgba(236,72,153,0.35);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+        }
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left 0.7s ease;
+        }
+        .btn-glow:hover::before { left: 100%; }
+        .btn-glow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 45px rgba(236,72,153,0.55);
+        }
+
+        /* ========== CARDS ========== */
+        .command-card, .feature-card-advanced {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+            overflow: hidden;
+        }
+        .command-card::before, .feature-card-advanced::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #ec4899, #a855f7);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .command-card:hover, .feature-card-advanced:hover {
+            transform: translateY(-5px);
+            border-color: rgba(236,72,153,0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 40px rgba(236,72,153,0.15);
+        }
+        .command-card:hover::before, .feature-card-advanced:hover::before { opacity: 1; }
+
+        /* ========== BOT IMAGE ========== */
+        .bot-hero-image {
+            width: 100%;
+            max-width: 480px;
+            border-radius: 24px;
+            border: 2px solid rgba(236,72,153,0.3);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 80px rgba(236,72,153,0.2);
+            transition: all 0.4s ease;
+        }
+        .bot-hero-image:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 0 100px rgba(236,72,153,0.3);
+        }
+
+        /* ========== SOCIAL GRID ========== */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .social-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 20px 10px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .social-btn i {
+            font-size: 24px;
+            transition: transform 0.35s ease;
+        }
+        .social-btn:hover {
+            transform: translateY(-5px);
+            color: white;
+        }
+        .social-btn:hover i {
+            transform: scale(1.2);
+        }
+        .social-btn.plugins i { color: #ec4899; }
+        .social-btn.plugins:hover {
+            border-color: rgba(236,72,153,0.6);
+            background: rgba(236,72,153,0.12);
+            box-shadow: 0 15px 40px rgba(236,72,153,0.3);
+        }
+        .social-btn.github i { color: #ffffff; }
+        .social-btn.github:hover {
+            border-color: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 15px 40px rgba(255,255,255,0.15);
+        }
+        .social-btn.channel i { color: #22c55e; }
+        .social-btn.channel:hover {
+            border-color: rgba(34,197,94,0.6);
+            background: rgba(34,197,94,0.12);
+            box-shadow: 0 15px 40px rgba(34,197,94,0.25);
+        }
+        .social-btn.vps i { color: #a855f7; }
+        .social-btn.vps:hover {
+            border-color: rgba(168,85,247,0.6);
+            background: rgba(168,85,247,0.12);
+            box-shadow: 0 15px 40px rgba(168,85,247,0.25);
+        }
+
+        /* ========== MOBILE MENU ========== */
+        #mobile-menu {
+            position: fixed;
+            inset: 0;
+            background: rgba(5,3,15,0.98);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+        }
+        #mobile-menu.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .mobile-nav-link {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .mobile-nav-link:hover {
+            background: rgba(236,72,153,0.12);
+            border-color: rgba(236,72,153,0.4);
+            transform: translateX(8px);
+            color: white;
+        }
+
+        /* ========== MODAL ========== */
+        .modal-advanced {
+            background: linear-gradient(145deg, rgba(13,10,26,0.98), rgba(21,15,43,0.98));
+            border: 1px solid rgba(236,72,153,0.3);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 60px rgba(236,72,153,0.15);
+        }
+        .glass-effect {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* ========== PREMIUM RIBBON ========== */
+        .premium-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(217,119,6,0.15));
+            border: 1px solid rgba(251,191,36,0.4);
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #fbbf24;
+            text-transform: uppercase;
+        }
+
+        /* ========== PULSE DOT ========== */
+        .pulse-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 0 0 rgba(34,197,94,0.7);
+            animation: pulseDot 2s infinite;
+            display: inline-block;
+        }
+        @keyframes pulseDot {
+            0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(34,197,94,0); }
+            100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .social-grid { grid-template-columns: repeat(2, 1fr); }
+            .bot-hero-image { max-width: 100%; }
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #ec4899, #a855f7);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, #f472b6, #c084fc); }
+    </style>
 </head>
 <body class="antialiased">
 
-    <!-- Navigation Header -->
+    <!-- ══════════ NAVBAR ══════════ -->
     <header id="header" class="navbar-premium fixed top-0 left-0 right-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#home" class="flex items-center space-x-3 text-xl font-bold text-white">
-                <img src="https://files.catbox.moe/e5b2az.jpg" alt="ALI-MD Logo" class="w-10 h-10 rounded-full border-2 border-pink-500 shadow-lg">
-                <span class="hero-title-gradient">ALI-MD</span>
+                <img src="https://files.catbox.moe/c30xpp.jpg" alt="ALI-MD Logo" class="w-10 h-10 rounded-full border-2 border-pink-500 shadow-lg">
+                <span class="hero-title-gradient" style="font-family:'Orbitron',sans-serif;letter-spacing:1px;">ALI-MD</span>
             </a>
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="/pair" class="nav-link-premium text-gray-300 hover:text-white">Quick Pair</a>
-                <a href="#commands" class="nav-link-premium text-gray-300 hover:text-white">Commands</a>
-                <a href="#features" class="nav-link-premium text-gray-300 hover:text-white">Features</a>
-                <a href="#about" class="nav-link-premium text-gray-300 hover:text-white">About</a>
-                <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" class="nav-link-premium text-gray-300 hover:text-white">Updates</a>
-                <a href="#" id="owner-link" class="nav-link-premium text-gray-300 hover:text-white">Contact</a>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="/pair" class="nav-link-premium text-gray-300">Pair</a>
+                <a href="/qr" class="nav-link-premium text-gray-300">QR</a>
+                <a href="plugins.html" class="nav-link-premium text-gray-300">Plugins</a>
+                <a href="#commands" class="nav-link-premium text-gray-300">Commands</a>
+                <a href="#features" class="nav-link-premium text-gray-300">Features</a>
+                <a href="#about" class="nav-link-premium text-gray-300">About</a>
+                <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-xl border border-pink-500/30 text-pink-400 hover:bg-pink-500/10 text-sm font-semibold transition">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
             </div>
-            <button id="mobile-menu-button" class="md:hidden text-white hover:text-pink-400 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="4" y1="12" x2="20" y2="12"></line>
-                    <line x1="4" y1="6" x2="20" y2="6"></line>
-                    <line x1="4" y1="18" x2="20" y2="18"></line>
-                </svg>
+            <button id="mobile-menu-button" class="md:hidden text-white hover:text-pink-400 transition p-2">
+                <i class="fas fa-bars text-2xl"></i>
             </button>
         </nav>
     </header>
 
-    <!-- Mobile Menu -->
+    <!-- ══════════ MOBILE MENU ══════════ -->
     <div id="mobile-menu">
-        <div class="pt-20 px-4">
-            <a href="/pair" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">Phone Pairing</a>
-            <a href="/qr-scanner" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">QR Pairing</a>
-            <a href="#commands" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">Commands</a>
-            <a href="#features" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">Features</a>
-            <a href="#about" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">About</a>
-            <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">Updates</a>
-            <a href="#" id="owner-link-mobile" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">Contact</a>
+        <div class="pt-24 px-6">
+            <a href="/pair" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">📱 Phone Pairing</a>
+            <a href="/qr" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">🔳 QR Pairing</a>
+            <a href="plugins.html" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">🧩 Plugins</a>
+            <a href="#commands" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">⚡ Commands</a>
+            <a href="#features" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">✨ Features</a>
+            <a href="#about" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">ℹ️ About</a>
+            <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">📢 Updates Channel</a>
+            <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">🐙 GitHub</a>
+            <a href="https://ali-md-host.vercel.app" target="_blank" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">🚀 VPS Host</a>
+            <button id="owner-link-mobile" class="w-full text-left block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">📞 Contact</button>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <main class="pt-20">
+    <!-- ══════════ MAIN CONTENT ══════════ -->
+    <main class="pt-20 relative z-10">
 
-        <!-- Video Hero Section -->
+        <!-- ═══ VIDEO HERO ═══ -->
         <section id="video-hero" class="relative overflow-hidden py-16">
-            <div class="container mx-auto">
+            <div class="container mx-auto px-4">
                 <div class="video-container">
                     <video id="heroVideo" class="hero-video" autoplay loop muted playsinline>
                         <source src="https://www.rabbit.zone.id/hbdl07.webm" type="video/webm">
@@ -64,24 +411,25 @@
                     </video>
                 </div>
                 <div class="video-content text-center mt-8 px-4">
+                    <div class="flex justify-center mb-4">
+                        <span class="premium-badge">
+                            <i class="fas fa-crown text-[9px]"></i> PREMIUM
+                        </span>
+                    </div>
                     <h2 class="text-3xl md:text-4xl font-black text-white mb-4">ALI MD — The Ultimate Multi-Device WhatsApp Bot</h2>
                     <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-4">Experience the best free WhatsApp bot — no server, no panel required!</p>
                     <p class="text-base md:text-lg text-gray-400 max-w-2xl mx-auto mb-3">Simply pair your device and start your bot instantly.</p>
-                    <div class="mt-6 text-[8px] text-gray-700 opacity-20">
-                        <p class="mb-1">Powered by ALI MD</p>
-                        <p>Created by ALI INXIDE 🍉</p>
-                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Quick Pair CTA Section (Previously Footer) -->
+        <!-- ═══ QUICK PAIR CTA ═══ -->
         <section id="pair" class="min-h-screen flex items-center px-4 py-20 relative overflow-hidden">
             <div class="absolute inset-0 grid-background opacity-20"></div>
             <div class="relative z-10 max-w-6xl mx-auto w-full">
                 <div class="mb-8 fade-in-up">
                     <span class="inline-block px-5 py-2 bg-pink-500/20 border border-pink-500/30 rounded-full text-pink-300 font-semibold text-xs uppercase tracking-wide">
-                        Instant Pairing Available
+                        ⚡ Instant Pairing Available
                     </span>
                 </div>
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 fade-in-up">
@@ -92,26 +440,16 @@
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 items-start fade-in-up" style="transition-delay: 200ms;">
                     <a href="/pair" class="btn-glow text-white font-semibold py-4 px-10 rounded-xl text-base shadow-2xl inline-flex items-center gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M16.6 14c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.7-.8.9-.1.1-.3.2-.5.1-.2-.1-.9-.3-1.8-1.1-.7-.6-1.1-1.4-1.3-1.6-.1-.2 0-.4.1-.5.1-.1.2-.2.4-.4.1-.1.2-.2.2-.4.1-.1.1-.3 0-.4-.1-.1-1.1-2.6-1.5-3.5-.4-.9-.8-1.1-.8-1.1-.1 0-.3-.1-.5-.1h-.5c-.2 0-.5.2-.6.5-.2.3-.7 1.4-.7 3.3s.8 3.8 1 4.1c.1.2 1.5 2.3 3.6 3.2.5.2.9.4 1.2.5.5.2 1 .2 1.3.1.4-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.3-.2-.5-.3zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/>
-                        </svg>
+                        <i class="fas fa-link"></i>
                         Phone Pairing
                     </a>
-                    <a href="/qr-scanner" class="px-8 py-4 rounded-xl border-2 border-pink-500/40 text-white font-semibold text-base hover:bg-pink-500/20 transition inline-flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="8" height="8" rx="1"></rect>
-                            <rect x="13" y="3" width="8" height="8" rx="1"></rect>
-                            <rect x="3" y="13" width="8" height="8" rx="1"></rect>
-                            <rect x="13" y="13" width="8" height="8" rx="1"></rect>
-                        </svg>
+                    <a href="/qr" class="px-8 py-4 rounded-xl border-2 border-pink-500/40 text-white font-semibold text-base hover:bg-pink-500/20 transition inline-flex items-center gap-2">
+                        <i class="fas fa-qrcode"></i>
                         QR Pairing
                     </a>
-                    <a href="#about" class="px-8 py-4 rounded-xl border-2 border-white/20 text-white font-semibold text-base hover:bg-white/10 transition inline-flex items-center gap-2">
-                        Learn More
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
+                    <a href="plugins.html" class="px-8 py-4 rounded-xl border-2 border-purple-500/40 text-white font-semibold text-base hover:bg-purple-500/20 transition inline-flex items-center gap-2">
+                        <i class="fas fa-puzzle-piece"></i>
+                        Plugin Store
                     </a>
                 </div>
                 <div class="mt-12 grid grid-cols-3 gap-6 max-w-2xl fade-in-up" style="transition-delay: 300ms;">
@@ -131,106 +469,194 @@
             </div>
         </section>
 
-        <!-- How to Pair Section (Previously Get Started) -->
-        <section id="start" class="py-32 px-4 bg-black/20">
+        <!-- ═══ CONNECT WITH US (NEW SOCIAL GRID) ═══ -->
+        <section id="connect" class="py-20 px-4">
             <div class="container mx-auto">
-                <div class="text-center max-w-3xl mx-auto mb-20 fade-in-up">
-                    <h2 class="text-5xl md:text-6xl font-black text-white mb-6">Get Started in 3 Easy Steps</h2>
-                    <p class="text-xl text-gray-300">No technical skills required. Your bot is ready in under a minute.</p>
+                <div class="text-center max-w-3xl mx-auto mb-12 fade-in-up">
+                    <div class="flex items-center justify-center gap-4 mb-4">
+                        <span class="hidden md:block flex-1 h-px bg-gradient-to-r from-transparent via-pink-500/30 to-transparent"></span>
+                        <span class="px-5 py-2 bg-gradient-to-br from-pink-500/10 to-purple-500/10 border border-pink-500/30 rounded-full text-pink-300 font-semibold text-xs uppercase tracking-wider">
+                            <i class="fas fa-compass mr-1"></i> Connect With Us
+                        </span>
+                        <span class="hidden md:block flex-1 h-px bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></span>
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-black text-white mb-3">Join The Community</h2>
+                    <p class="text-base text-gray-400">Stay updated with latest features, plugins and support</p>
                 </div>
-                <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
-                    <div class="relative p-10 rounded-3xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 border border-pink-500/20 fade-in-up">
 
-                        <h3 class="text-2xl text-white font-bold mb-4 mt-6">Click Pair Button</h3>
-                        <p class="text-gray-300 leading-relaxed">Get your unique 8-digit pairing code instantly—completely free</p>
+                <div class="social-grid fade-in-up" style="transition-delay: 150ms;">
+                    <!-- Plugins -->
+                    <a href="plugins.html" class="social-btn plugins">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <span>Plugins</span>
+                    </a>
+                    <!-- GitHub -->
+                    <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener" class="social-btn github">
+                        <i class="fab fa-github"></i>
+                        <span>GitHub</span>
+                    </a>
+                    <!-- Channel -->
+                    <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" rel="noopener" class="social-btn channel">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>Channel</span>
+                    </a>
+                    <!-- VPS Host -->
+                    <a href="https://ali-md-host.vercel.app" target="_blank" rel="noopener" class="social-btn vps">
+                        <i class="fas fa-server"></i>
+                        <span>VPS Host</span>
+                    </a>
+                </div>
+
+                <!-- Trust Row -->
+                <div class="max-w-2xl mx-auto mt-12 grid grid-cols-4 gap-4 fade-in-up" style="transition-delay: 250ms;">
+                    <div class="text-center p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                        <div class="text-xl font-black hero-title-gradient">99.9%</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1 font-bold">Uptime</div>
                     </div>
-                    <div class="relative p-10 rounded-3xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 fade-in-up" style="transition-delay: 150ms;">
-
-                        <h3 class="text-2xl text-white font-bold mb-4 mt-6">Link Device</h3>
-                        <p class="text-gray-300 leading-relaxed">Open WhatsApp → Linked Devices → Enter your code</p>
+                    <div class="text-center p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                        <div class="text-xl font-black hero-title-gradient">1.2K+</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1 font-bold">Sessions</div>
                     </div>
-                    <div class="relative p-10 rounded-3xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 border border-pink-500/20 fade-in-up" style="transition-delay: 300ms;">
-
-                        <h3 class="text-2xl text-white font-bold mb-4 mt-6">Start Using Bot</h3>
-                        <p class="text-gray-300 leading-relaxed">Type .menu and unlock 100+ powerful commands instantly</p>
+                    <div class="text-center p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                        <div class="text-xl font-black hero-title-gradient">5.0★</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1 font-bold">Rating</div>
+                    </div>
+                    <div class="text-center p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                        <div class="text-xl font-black hero-title-gradient">24/7</div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1 font-bold">Support</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Commands Showcase (Redesigned) -->
+        <!-- ═══ HOW TO PAIR ═══ -->
+        <section id="start" class="py-24 px-4 bg-black/20">
+            <div class="container mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16 fade-in-up">
+                    <h2 class="text-4xl md:text-5xl font-black text-white mb-6">Get Started in 3 Easy Steps</h2>
+                    <p class="text-lg text-gray-300">No technical skills required. Your bot is ready in under a minute.</p>
+                </div>
+                <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
+                    <div class="relative p-8 rounded-3xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 border border-pink-500/20 fade-in-up">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center text-white font-black text-xl mb-5">1</div>
+                        <h3 class="text-xl text-white font-bold mb-3">Click Pair Button</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">Get your unique 8-digit pairing code instantly — completely free</p>
+                    </div>
+                    <div class="relative p-8 rounded-3xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 fade-in-up" style="transition-delay: 150ms;">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-black text-xl mb-5">2</div>
+                        <h3 class="text-xl text-white font-bold mb-3">Link Device</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">Open WhatsApp → Linked Devices → Enter your code</p>
+                    </div>
+                    <div class="relative p-8 rounded-3xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 border border-pink-500/20 fade-in-up" style="transition-delay: 300ms;">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center text-white font-black text-xl mb-5">3</div>
+                        <h3 class="text-xl text-white font-bold mb-3">Start Using Bot</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">Type .menu and unlock 100+ powerful commands instantly</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ COMMANDS SHOWCASE ═══ -->
         <section id="commands" class="py-24 px-4">
             <div class="container mx-auto">
                 <div class="max-w-3xl mb-16 fade-in-up">
+                    <span class="inline-block px-4 py-2 bg-pink-500/20 border border-pink-500/30 rounded-full text-pink-300 font-semibold text-xs uppercase tracking-wide mb-4">100+ Commands</span>
                     <h2 class="text-3xl md:text-4xl font-black text-white mb-4">Powerful Command Library</h2>
                     <p class="text-base text-gray-300">Over 100 commands at your fingertips—all completely free to use</p>
                 </div>
                 <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="command-card p-6 rounded-xl fade-in-up group">
-                        <h4 class="font-bold text-pink-400 text-base mb-1 group-hover:text-pink-300 transition">Smart Assistant</h4>
+                        <i class="fas fa-robot text-pink-400 text-xl mb-3 group-hover:scale-110 transition"></i>
+                        <h4 class="font-bold text-pink-400 text-base mb-1">Smart Assistant</h4>
                         <p class="text-xs text-gray-400">Intelligent Responses</p>
                     </div>
                     <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 100ms;">
-                        <h4 class="font-bold text-purple-400 text-base mb-1 group-hover:text-purple-300 transition">Downloader</h4>
+                        <i class="fas fa-download text-purple-400 text-xl mb-3 group-hover:scale-110 transition"></i>
+                        <h4 class="font-bold text-purple-400 text-base mb-1">Downloader</h4>
                         <p class="text-xs text-gray-400">YouTube, TikTok, IG</p>
                     </div>
                     <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 200ms;">
-                        <h4 class="font-bold text-pink-400 text-base mb-1 group-hover:text-pink-300 transition">Group Tools</h4>
+                        <i class="fas fa-users-cog text-pink-400 text-xl mb-3 group-hover:scale-110 transition"></i>
+                        <h4 class="font-bold text-pink-400 text-base mb-1">Group Tools</h4>
                         <p class="text-xs text-gray-400">Admin Controls</p>
                     </div>
                     <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 300ms;">
-                        <h4 class="font-bold text-purple-400 text-base mb-1 group-hover:text-purple-300 transition">Media Tools</h4>
+                        <i class="fas fa-image text-purple-400 text-xl mb-3 group-hover:scale-110 transition"></i>
+                        <h4 class="font-bold text-purple-400 text-base mb-1">Media Tools</h4>
                         <p class="text-xs text-gray-400">Stickers & Effects</p>
                     </div>
-                    <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 100ms;">
-                        <h4 class="font-bold text-pink-400 text-base mb-1 group-hover:text-pink-300 transition">Search</h4>
+                    <div class="command-card p-6 rounded-xl fade-in-up group">
+                        <i class="fas fa-search text-pink-400 text-xl mb-3 group-hover:scale-110 transition"></i>
+                        <h4 class="font-bold text-pink-400 text-base mb-1">Search</h4>
                         <p class="text-xs text-gray-400">Web & Images</p>
                     </div>
-                    <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 200ms;">
-                        <h4 class="font-bold text-purple-400 text-base mb-1 group-hover:text-purple-300 transition">Entertainment</h4>
+                    <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 100ms;">
+                        <i class="fas fa-gamepad text-purple-400 text-xl mb-3 group-hover:scale-110 transition"></i>
+                        <h4 class="font-bold text-purple-400 text-base mb-1">Entertainment</h4>
                         <p class="text-xs text-gray-400">Games & Fun</p>
                     </div>
-                    <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 300ms;">
-                        <h4 class="font-bold text-pink-400 text-base mb-1 group-hover:text-pink-300 transition">Utilities</h4>
+                    <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 200ms;">
+                        <i class="fas fa-tools text-pink-400 text-xl mb-3 group-hover:scale-110 transition"></i>
+                        <h4 class="font-bold text-pink-400 text-base mb-1">Utilities</h4>
                         <p class="text-xs text-gray-400">Converters & Tools</p>
                     </div>
-                    <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 400ms;">
-                        <h4 class="font-bold text-purple-400 text-base mb-1 group-hover:text-purple-300 transition">Settings</h4>
+                    <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 300ms;">
+                        <i class="fas fa-cog text-purple-400 text-xl mb-3 group-hover:scale-110 transition"></i>
+                        <h4 class="font-bold text-purple-400 text-base mb-1">Settings</h4>
                         <p class="text-xs text-gray-400">Customization</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Features Grid (Redesigned) -->
+        <!-- ═══ FEATURES ═══ -->
         <section id="features" class="py-24 px-4 bg-black/20">
             <div class="container mx-auto">
                 <div class="max-w-3xl mb-16 fade-in-up">
+                    <span class="inline-block px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 font-semibold text-xs uppercase tracking-wide mb-4">Why ALI-MD</span>
                     <h2 class="text-3xl md:text-4xl font-black text-white mb-4">Why Choose ALI-MD</h2>
                     <p class="text-base text-gray-300">Professional features, completely free. No hidden costs, no server required.</p>
                 </div>
                 <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div class="feature-card-advanced rounded-2xl p-8 fade-in-up">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center mb-4">
+                            <i class="fas fa-bolt text-white"></i>
+                        </div>
                         <h3 class="text-lg font-bold text-white mb-3">Lightning Fast</h3>
                         <p class="text-gray-300 text-sm leading-relaxed">Optimized for speed with near-instant response times on every command</p>
                     </div>
                     <div class="feature-card-advanced rounded-2xl p-8 fade-in-up" style="transition-delay: 100ms;">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-4">
+                            <i class="fas fa-shield-alt text-white"></i>
+                        </div>
                         <h3 class="text-lg font-bold text-white mb-3">Secure by Design</h3>
                         <p class="text-gray-300 text-sm leading-relaxed">End-to-end encrypted sessions with enterprise-grade security protocols</p>
                     </div>
                     <div class="feature-card-advanced rounded-2xl p-8 fade-in-up" style="transition-delay: 200ms;">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center mb-4">
+                            <i class="fas fa-clock text-white"></i>
+                        </div>
                         <h3 class="text-lg font-bold text-white mb-3">24/7 Uptime</h3>
                         <p class="text-gray-300 text-sm leading-relaxed">Cloud-hosted with automatic failover for uninterrupted service</p>
                     </div>
-                    <div class="feature-card-advanced rounded-2xl p-8 fade-in-up" style="transition-delay: 100ms;">
+                    <div class="feature-card-advanced rounded-2xl p-8 fade-in-up">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-4">
+                            <i class="fas fa-magic text-white"></i>
+                        </div>
                         <h3 class="text-lg font-bold text-white mb-3">No Setup Required</h3>
                         <p class="text-gray-300 text-sm leading-relaxed">No panel, no server, no installation—just pair and start using immediately</p>
                     </div>
-                    <div class="feature-card-advanced rounded-2xl p-8 fade-in-up" style="transition-delay: 200ms;">
+                    <div class="feature-card-advanced rounded-2xl p-8 fade-in-up" style="transition-delay: 100ms;">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center mb-4">
+                            <i class="fas fa-sync-alt text-white"></i>
+                        </div>
                         <h3 class="text-lg font-bold text-white mb-3">Regular Updates</h3>
                         <p class="text-gray-300 text-sm leading-relaxed">Constantly evolving with new features and improvements</p>
                     </div>
-                    <div class="feature-card-advanced rounded-2xl p-8 fade-in-up" style="transition-delay: 300ms;">
+                    <div class="feature-card-advanced rounded-2xl p-8 fade-in-up" style="transition-delay: 200ms;">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-4">
+                            <i class="fas fa-crown text-white"></i>
+                        </div>
                         <h3 class="text-lg font-bold text-white mb-3">Premium Quality</h3>
                         <p class="text-gray-300 text-sm leading-relaxed">Professional-grade bot with powerful automation and advanced features included</p>
                     </div>
@@ -238,31 +664,31 @@
             </div>
         </section>
 
-        <!-- About/Hero Section (Previously at top) -->
-        <section id="about" class="py-32 px-4">
+        <!-- ═══ ABOUT ═══ -->
+        <section id="about" class="py-24 px-4">
             <div class="container mx-auto">
                 <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16">
                     <div class="lg:w-1/2 fade-in-up">
-                        <img src="https://www.rabbit.zone.id/7rxkz4.jpg" alt="ALI-MD Bot" class="bot-hero-image mx-auto lg:mx-0 shadow-2xl" onerror="this.src='https://via.placeholder.com/500x500/7b1fa2/ffffff?text=ALI-MD'">
+                        <img src="https://files.catbox.moe/c30xpp.jpg" alt="ALI-MD Bot" class="bot-hero-image mx-auto lg:mx-0 shadow-2xl">
                     </div>
                     <div class="lg:w-1/2 fade-in-up" style="transition-delay: 150ms;">
                         <span class="inline-block px-4 py-2 bg-pink-500/20 border border-pink-500/30 rounded-full text-pink-300 font-semibold mb-6 text-sm">ABOUT ALI-MD</span>
                         <h2 class="text-4xl md:text-5xl font-black text-white mb-6">The Ultimate WhatsApp Bot Platform</h2>
-                        <p class="text-xl text-gray-300 leading-relaxed mb-6">
+                        <p class="text-lg text-gray-300 leading-relaxed mb-6">
                             ALI-MD is a powerful WhatsApp bot that brings advanced automation, smart features, and comprehensive media processing directly to your WhatsApp—completely free, with no panel or server required.
                         </p>
-                        <p class="text-lg text-gray-400 leading-relaxed mb-8">
+                        <p class="text-base text-gray-400 leading-relaxed mb-8">
                             With over 100 commands, instant pairing, and professional-grade security, ALI-MD transforms how you use WhatsApp. Simply pair the bot and start exploring powerful features—from downloading media to managing groups, all at your fingertips.
                         </p>
-                        <div class="flex flex-wrap gap-4">
-                            <div class="px-6 py-3 rounded-xl bg-pink-500/20 border border-pink-500/30">
-                                <div class="text-pink-400 font-bold text-lg">No Server Needed</div>
+                        <div class="flex flex-wrap gap-3">
+                            <div class="px-5 py-3 rounded-xl bg-pink-500/20 border border-pink-500/30">
+                                <div class="text-pink-400 font-bold text-sm">No Server Needed</div>
                             </div>
-                            <div class="px-6 py-3 rounded-xl bg-purple-500/20 border border-purple-500/30">
-                                <div class="text-purple-400 font-bold text-lg">300+ Commands</div>
+                            <div class="px-5 py-3 rounded-xl bg-purple-500/20 border border-purple-500/30">
+                                <div class="text-purple-400 font-bold text-sm">100+ Commands</div>
                             </div>
-                            <div class="px-6 py-3 rounded-xl bg-pink-500/20 border border-pink-500/30">
-                                <div class="text-pink-400 font-bold text-lg">Free Forever</div>
+                            <div class="px-5 py-3 rounded-xl bg-pink-500/20 border border-pink-500/30">
+                                <div class="text-pink-400 font-bold text-sm">Free Forever</div>
                             </div>
                         </div>
                     </div>
@@ -272,70 +698,149 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="py-16 px-4 border-t border-white/10">
+    <!-- ══════════ FOOTER ══════════ -->
+    <footer class="py-16 px-4 border-t border-white/10 relative z-10">
         <div class="container mx-auto">
             <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-12 mb-12">
                 <div>
                     <div class="flex items-center space-x-3 mb-4">
-                        <img src="https://files.catbox.moe/e5b2az.jpg" alt="ALI-MD" class="w-12 h-12 rounded-full border-2 border-pink-500">
-                        <span class="text-2xl font-black hero-title-gradient">ALI-MD</span>
+                        <img src="https://files.catbox.moe/c30xpp.jpg" alt="ALI-MD" class="w-12 h-12 rounded-full border-2 border-pink-500">
+                        <span class="text-2xl font-black hero-title-gradient" style="font-family:'Orbitron',sans-serif;">ALI-MD</span>
                     </div>
-                    <p class="text-gray-400">The best free WhatsApp bot. No panel, no server—just pair and run.</p>
+                    <p class="text-gray-400 text-sm">The best free WhatsApp bot. No panel, no server—just pair and run.</p>
                 </div>
                 <div>
                     <h4 class="text-white font-bold text-lg mb-4">Quick Links</h4>
                     <div class="space-y-2">
-                        <a href="#pair" class="block text-gray-400 hover:text-pink-400 transition">Pair Now</a>
-                        <a href="#commands" class="block text-gray-400 hover:text-pink-400 transition">Commands</a>
-                        <a href="#features" class="block text-gray-400 hover:text-pink-400 transition">Features</a>
+                        <a href="/pair" class="block text-gray-400 hover:text-pink-400 transition text-sm"><i class="fas fa-link mr-2 text-xs"></i>Pair Now</a>
+                        <a href="plugins.html" class="block text-gray-400 hover:text-pink-400 transition text-sm"><i class="fas fa-puzzle-piece mr-2 text-xs"></i>Plugins</a>
+                        <a href="#commands" class="block text-gray-400 hover:text-pink-400 transition text-sm"><i class="fas fa-terminal mr-2 text-xs"></i>Commands</a>
+                        <a href="#features" class="block text-gray-400 hover:text-pink-400 transition text-sm"><i class="fas fa-star mr-2 text-xs"></i>Features</a>
                     </div>
                 </div>
                 <div>
                     <h4 class="text-white font-bold text-lg mb-4">Connect</h4>
                     <div class="space-y-2">
-                        <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" class="block text-gray-400 hover:text-pink-400 transition">Updates Channel</a>
-                        <a href="#" id="owner-link-footer" class="block text-gray-400 hover:text-pink-400 transition">Contact Developer</a>
+                        <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" class="block text-gray-400 hover:text-green-400 transition text-sm"><i class="fab fa-whatsapp mr-2 text-xs"></i>Updates Channel</a>
+                        <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" class="block text-gray-400 hover:text-pink-400 transition text-sm"><i class="fab fa-github mr-2 text-xs"></i>GitHub</a>
+                        <a href="https://ali-md-host.vercel.app" target="_blank" class="block text-gray-400 hover:text-purple-400 transition text-sm"><i class="fas fa-server mr-2 text-xs"></i>VPS Host</a>
+                        <button id="owner-link-footer" class="block text-gray-400 hover:text-pink-400 transition text-sm"><i class="fas fa-envelope mr-2 text-xs"></i>Contact Developer</button>
                     </div>
                 </div>
             </div>
             <div class="border-t border-white/10 pt-8 text-center">
-                <p class="text-gray-400 text-sm">漏 2025 ALI INXIDE INC. All rights reserved.</p>
+                <p class="text-gray-400 text-sm">© 2026 <span class="hero-title-gradient font-bold">ALI-MD</span> · All rights reserved · Made with <i class="fas fa-heart text-pink-500 text-xs"></i> for the community</p>
             </div>
         </div>
     </footer>
 
-    <!-- Owner Modal -->
+    <!-- ══════════ OWNER MODAL ══════════ -->
     <div id="owner-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/90" id="modal-backdrop"></div>
-        <div class="modal-advanced w-full max-w-md mx-auto rounded-2xl relative z-10 p-10 text-center">
-            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-4xl transition">&times;</button>
-            <img src="https://avatars.githubusercontent.com/u/105071373?v=4" alt="Owner" class="w-28 h-28 rounded-full mx-auto mb-6 border-4 border-pink-500/60 shadow-2xl">
-            <h3 class="text-3xl font-bold text-white mb-2">ALI INXIDE</h3>
-            <p class="text-pink-400 text-lg font-semibold mb-8">WhatsApp Bot Developer</p>
-            <div class="text-left space-y-4">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" id="modal-backdrop"></div>
+        <div class="modal-advanced w-full max-w-md mx-auto rounded-3xl relative z-10 p-8 text-center">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl transition leading-none">&times;</button>
+            <img src="https://avatars.githubusercontent.com/u/105071373?v=4" alt="Owner" class="w-24 h-24 rounded-full mx-auto mb-5 border-4 border-pink-500/60 shadow-2xl">
+            <h3 class="text-2xl font-bold text-white mb-1">ALI INXIDE</h3>
+            <p class="text-pink-400 text-sm font-semibold mb-6">WhatsApp Bot Developer</p>
+            <div class="text-left space-y-3">
                 <a href="https://wa.me/923197521693" target="_blank" class="flex items-center p-4 glass-effect rounded-xl hover:bg-white/10 transition">
-                    <svg class="w-6 h-6 mr-4 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M16.6 14c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.7-.8.9-.1.1-.3.2-.5.1-.2-.1-.9-.3-1.8-1.1-.7-.6-1.1-1.4-1.3-1.6-.1-.2 0-.4.1-.5.1-.1.2-.2.4-.4.1-.1.2-.2.2-.4.1-.1.1-.3 0-.4-.1-.1-1.1-2.6-1.5-3.5-.4-.9-.8-1.1-.8-1.1-.1 0-.3-.1-.5-.1h-.5c-.2 0-.5.2-.6.5-.2.3-.7 1.4-.7 3.3s.8 3.8 1 4.1c.1.2 1.5 2.3 3.6 3.2.5.2.9.4 1.2.5.5.2 1 .2 1.3.1.4-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.3-.2-.5-.3zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/>
-                    </svg>
+                    <i class="fab fa-whatsapp text-green-400 text-2xl mr-4 w-6"></i>
                     <div>
-                        <p class="text-white font-semibold">WhatsApp</p>
-                        <p class="text-gray-400 text-sm">+923197521693</p>
+                        <p class="text-white font-semibold text-sm">WhatsApp</p>
+                        <p class="text-gray-400 text-xs">+92 319 752 1693</p>
                     </div>
                 </a>
                 <a href="https://github.com/ALI-INXIDE" target="_blank" class="flex items-center p-4 glass-effect rounded-xl hover:bg-white/10 transition">
-                    <svg class="w-6 h-6 mr-4 text-gray-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.68-.22.68-.48v-1.69c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.36 1.09 2.94.83.09-.65.35-1.09.63-1.34-2.25-.26-4.6-1.12-4.6-4.99 0-1.1.39-2 .94-2.71-.09-.26-.41-1.28.09-2.68 0 0 .84-.27 2.75 1.02.8-.22 1.65-.33 2.5-.33.85 0 1.7.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.5 1.4.18 2.42.09 2.68.55.71.94 1.61.94 2.71 0 3.88-2.35 4.73-4.61 4.98.36.31.68.92.68 1.85v2.72c0 .27.18.58.69.48C19.13 20.17 22 16.42 22 12c0-5.52-4.48-10-10-10z"/>
-                    </svg>
+                    <i class="fab fa-github text-gray-300 text-2xl mr-4 w-6"></i>
                     <div>
-                        <p class="text-white font-semibold">Github</p>
-                        <p class="text-gray-400 text-sm">ALI-INXIDE</p>
+                        <p class="text-white font-semibold text-sm">GitHub</p>
+                        <p class="text-gray-400 text-xs">ALI-INXIDE</p>
+                    </div>
+                </a>
+                <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" class="flex items-center p-4 glass-effect rounded-xl hover:bg-white/10 transition">
+                    <i class="fas fa-bullhorn text-pink-400 text-2xl mr-4 w-6"></i>
+                    <div>
+                        <p class="text-white font-semibold text-sm">Updates Channel</p>
+                        <p class="text-gray-400 text-xs">Join for latest updates</p>
                     </div>
                 </a>
             </div>
         </div>
     </div>
 
-    <script src="/js/script.js"></script>
+    <!-- ══════════ SCRIPT ══════════ -->
+    <script>
+        // ── Navbar Scroll Effect ──
+        window.addEventListener('scroll', () => {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 20);
+        });
+
+        // ── Mobile Menu ──
+        const mobileMenuBtn = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            const icon = mobileMenuBtn.querySelector('i');
+            if (mobileMenu.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
+
+        // ── Owner Modal ──
+        const ownerModal = document.getElementById('owner-modal');
+        const openOwnerBtns = [
+            document.getElementById('owner-link'),
+            document.getElementById('owner-link-mobile'),
+            document.getElementById('owner-link-footer')
+        ];
+        const closeModal = document.getElementById('close-modal');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+
+        function openModal() { ownerModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+        function closeModalFn() { ownerModal.classList.add('hidden'); document.body.style.overflow = ''; }
+
+        openOwnerBtns.forEach(btn => {
+            if (btn) btn.addEventListener('click', (e) => { e.preventDefault(); openModal(); });
+        });
+        if (closeModal) closeModal.addEventListener('click', closeModalFn);
+        if (modalBackdrop) modalBackdrop.addEventListener('click', closeModalFn);
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !ownerModal.classList.contains('hidden')) closeModalFn();
+        });
+
+        // ── Intersection Observer for Animations ──
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.style.opacity = '1';
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+
+        // ── Video Error Fallback ──
+        const video = document.getElementById('heroVideo');
+        if (video) {
+            video.addEventListener('error', () => {
+                console.warn('Video failed to load');
+                video.style.display = 'none';
+            });
+        }
+    </script>
 </body>
 </html>
