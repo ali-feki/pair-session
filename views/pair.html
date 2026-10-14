@@ -1,187 +1,579 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phone Pairing | ALI-MD</title>
-    <link rel="icon" href="https://files.catbox.moe/e5b2az.jpg" type="image/png">
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STARK-MD | PAIR CODE</title>
+  <link rel="icon" href="https://files.catbox.moe/jgqpqr.jpg" type="image/png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --pink: #ec4899;
+      --purple: #a855f7;
+      --bg-dark: #060412;
+      --bg-card: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.08);
+      --border-pink: rgba(236,72,153,0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* ─── Animated background ─── */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    }
+    .bg-layer::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 15% 20%, rgba(236,72,153,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 85% 80%, rgba(168,85,247,0.14) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(236,72,153,0.06) 0%, transparent 70%);
+    }
+    .grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(236,72,153,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(236,72,153,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* ─── Navbar ─── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      background: rgba(6,4,18,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ─── Card ─── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04) inset,
+        0 30px 80px rgba(0,0,0,0.5),
+        0 0 60px rgba(236,72,153,0.06);
+      transition: box-shadow 0.4s ease, transform 0.4s ease;
+    }
+    .card:hover {
+      box-shadow:
+        0 0 0 1px rgba(236,72,153,0.15) inset,
+        0 30px 80px rgba(0,0,0,0.6),
+        0 0 80px rgba(236,72,153,0.12);
+    }
+
+    /* ─── Gradient text ─── */
+    .gradient-text {
+      background: linear-gradient(135deg, #ec4899, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ─── Input ─── */
+    .phone-input {
+      width: 100%;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+    .phone-input:focus {
+      border-color: rgba(236,72,153,0.5);
+      background: rgba(0,0,0,0.4);
+      box-shadow: 0 0 0 3px rgba(236,72,153,0.1);
+    }
+    .phone-input::placeholder { color: rgba(255,255,255,0.3); }
+
+    /* ─── Button ─── */
+    .btn-primary {
+      width: 100%;
+      padding: 16px 24px;
+      background: linear-gradient(135deg, #ec4899, #a855f7);
+      border: none;
+      border-radius: 14px;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      transition: left 0.5s ease;
+    }
+    .btn-primary:hover::before { left: 100%; }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(236,72,153,0.4);
+    }
+    .btn-primary:disabled {
+      opacity: 0.5; cursor: not-allowed; transform: none;
+      box-shadow: none;
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    /* ─── Code display ─── */
+    .code-box {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(236,72,153,0.3);
+      border-radius: 16px;
+      padding: 20px 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .code-box::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(236,72,153,0.05), rgba(168,85,247,0.05));
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .code-box:hover::before { opacity: 1; }
+    .code-box:hover {
+      border-color: rgba(236,72,153,0.6);
+      box-shadow: 0 0 20px rgba(236,72,153,0.15);
+    }
+    .code-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, #ec4899, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ─── Session ID box ─── */
+    .session-box {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(168,85,247,0.3);
+      border-radius: 16px;
+      padding: 20px 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .session-box:hover {
+      border-color: rgba(168,85,247,0.6);
+      box-shadow: 0 0 20px rgba(168,85,247,0.15);
+    }
+    .session-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+      word-break: break-all;
+      line-height: 1.6;
+    }
+
+    /* ─── Error box ─── */
+    .error-box {
+      background: rgba(236,72,153,0.08);
+      border: 1px solid rgba(236,72,153,0.3);
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: #f9a8d4;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* ─── Steps ─── */
+    .step {
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(168,85,247,0.2));
+      border: 1px solid rgba(236,72,153,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #ec4899;
+      flex-shrink: 0;
+    }
+
+    /* ─── Loader ─── */
+    .loader {
+      width: 20px; height: 20px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── Pulse ring ─── */
+    @keyframes pulse-ring {
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(1.3); opacity: 0; }
+    }
+    .pulse-ring {
+      animation: pulse-ring 1.5s ease-out infinite;
+    }
+
+    /* ─── Fade in ─── */
+    .fade-up {
+      opacity: 0; transform: translateY(20px);
+      animation: fadeUp 0.6s ease forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+
+    /* ─── Badge ─── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px;
+      background: rgba(236,72,153,0.1);
+      border: 1px solid rgba(236,72,153,0.25);
+      border-radius: 100px;
+      font-size: 12px; font-weight: 600;
+      color: #f9a8d4;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* ─── Floating particles ─── */
+    .particle {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: floatUp linear infinite;
+      z-index: 0;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 0.5; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+  </style>
 </head>
-<body class="antialiased min-h-screen flex items-center justify-center px-4">
-    <main class="w-full max-w-2xl">
-        <div class="text-center mb-8 fade-in-up">
-            <a href="/" class="inline-flex items-center space-x-3 mb-6">
-                <img src="https://files.catbox.moe/e5b2az.jpg" alt="ALI-MD Logo" class="w-16 h-16 rounded-full border-2 border-pink-500 shadow-lg">
-                <span class="text-3xl font-black hero-title-gradient">ALI-MD</span>
-            </a>
-            <h1 class="text-4xl md:text-5xl font-black text-white mb-4">Phone Number Pairing</h1>
-            <p class="text-lg text-gray-300">Enter your phone number to get a pairing code</p>
-        </div>
+<body>
 
-        <div class="feature-card-advanced rounded-2xl p-8 mb-6 fade-in-up" style="transition-delay: 100ms;">
-            <div class="mb-6">
-                <label for="phoneNumber" class="block text-white font-semibold mb-3">
-                    <i class="fas fa-phone text-pink-400 mr-2"></i>
-                    WhatsApp Phone Number
-                </label>
-                <input 
-                    type="tel" 
-                    id="phoneNumber" 
-                    placeholder="e.g., 923197521693" 
-                    class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500 transition"
-                    autocomplete="tel"
-                >
-                <p class="text-gray-400 text-sm mt-2">Include country code without + or spaces</p>
+  <!-- Background -->
+  <div class="bg-layer">
+    <div class="grid-bg"></div>
+  </div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <nav class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="/" class="flex items-center gap-3">
+        <img src="https://files.catbox.moe/jgqpqr.jpg" alt="STARK-MD" class="w-9 h-9 rounded-full border-2 border-pink-500 shadow-lg">
+        <span class="font-black text-xl gradient-text">STARK-MD</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="/" class="text-gray-400 hover:text-white text-sm font-medium transition">Home</a>
+        <a href="#" class="text-gray-400 hover:text-white text-sm font-medium transition">Commands</a>
+        <a href="https://github.com/ALI-INXIDE/STARK-MD" target="_blank" class="flex items-center gap-2 px-4 py-2 rounded-xl border border-pink-500/30 text-pink-400 hover:bg-pink-500/10 text-sm font-semibold transition">
+          <i class="fab fa-github"></i> GitHub
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main -->
+  <main class="relative z-10 flex-1 flex items-center justify-center px-4 pt-24 pb-12">
+    <div class="w-full max-w-5xl mx-auto">
+
+      <div class="flex flex-col lg:flex-row gap-8 items-start">
+
+        <!-- ─── Left: Form ─── -->
+        <div class="w-full lg:w-1/2">
+          <div class="card p-8 fade-up">
+
+            <!-- Logo -->
+            <div class="flex items-center gap-4 mb-8 fade-up delay-1">
+              <div class="relative">
+                <img src="https://files.catbox.moe/up449y.jpg" alt="STARK-MD" class="w-14 h-14 rounded-2xl border-2 border-pink-500/50 shadow-lg">
+                <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[#060412]"></div>
+              </div>
+              <div>
+                <div class="font-black text-xl text-white">STARK-MD</div>
+                <div class="text-xs text-gray-400 font-medium">WhatsApp Bot Platform</div>
+              </div>
+              <div class="ml-auto">
+                <span class="badge"><i class="fas fa-circle text-[8px] text-green-400"></i> Online</span>
+              </div>
             </div>
 
-            <button 
-                id="generateBtn" 
-                class="w-full btn-glow text-white font-semibold py-4 px-8 rounded-xl shadow-2xl flex items-center justify-center gap-3 mb-6"
-            >
-                <i class="fas fa-key"></i>
-                <span>Generate Pairing Code</span>
-            </button>
-
-            <div id="loading" class="hidden text-center py-8">
-                <div class="inline-block w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p class="text-gray-300 font-semibold">Generating your code...</p>
+            <!-- Heading -->
+            <div class="mb-8 fade-up delay-2">
+              <h1 class="text-3xl font-black text-white mb-2">Get Your <span class="gradient-text">Pair Code</span></h1>
+              <p class="text-gray-400 text-sm leading-relaxed">Enter your WhatsApp number with country code to generate your pairing code instantly.</p>
             </div>
 
-            <div id="codeDisplay" class="hidden glass-effect rounded-xl p-6 text-center">
-                <p class="text-gray-300 mb-4">Your Pairing Code:</p>
-                <div class="bg-black/60 rounded-xl p-6 mb-4">
-                    <p id="pairCode" class="text-4xl font-black hero-title-gradient tracking-wider"></p>
+            <!-- Input -->
+            <div class="space-y-4 fade-up delay-3">
+              <div class="relative">
+                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-pink-400">
+                  <i class="fas fa-phone text-sm"></i>
                 </div>
-                <button 
-                    id="copyBtn" 
-                    class="w-full px-6 py-3 rounded-xl border-2 border-pink-500/30 text-pink-400 font-semibold hover:bg-pink-500/10 transition flex items-center justify-center gap-2"
-                >
-                    <i class="fas fa-copy"></i>
-                    <span>Copy Code</span>
-                </button>
+                <input
+                  type="tel"
+                  inputmode="tel"
+                  id="number"
+                  placeholder="+92 3XX XXXXXXX"
+                  autocomplete="tel"
+                  class="phone-input pl-10"
+                />
+              </div>
+
+              <button id="submit" class="btn-primary">
+                <span id="btn-text"><i class="fas fa-key mr-2"></i>Generate Pair Code</span>
+              </button>
             </div>
 
-            <div class="glass-effect rounded-xl p-4 mt-6">
-                <h3 class="text-white font-bold mb-3 flex items-center gap-2">
-                    <i class="fas fa-info-circle text-pink-400"></i>
-                    How to Use
-                </h3>
-                <ol class="space-y-2 text-gray-300 text-sm">
-                    <li class="flex items-start gap-2">
-                        <span class="text-pink-400 font-bold">1.</span>
-                        <span>Enter your WhatsApp phone number above</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="text-pink-400 font-bold">2.</span>
-                        <span>Click "Generate Pairing Code"</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="text-pink-400 font-bold">3.</span>
-                        <span>Open WhatsApp → Settings → Linked Devices</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="text-pink-400 font-bold">4.</span>
-                        <span>Tap "Link a Device" → "Link with phone number instead"</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="text-pink-400 font-bold">5.</span>
-                        <span>Enter the 8-digit code shown above</span>
-                    </li>
-                </ol>
-            </div>
+            <!-- Output -->
+            <div id="output" class="mt-6"></div>
 
-            <div class="text-center mt-6">
-                <p class="text-gray-400 text-sm mb-4">Or use QR code pairing instead</p>
-                <a href="/qr-scanner" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-pink-500/30 text-pink-400 font-semibold hover:bg-pink-500/10 transition">
-                    <i class="fas fa-qrcode"></i>
-                    <span>Use QR Pairing</span>
+          </div>
+        </div>
+
+        <!-- ─── Right: Info ─── -->
+        <div class="w-full lg:w-1/2 space-y-5">
+
+          <!-- How it works -->
+          <div class="card p-7 fade-up delay-2">
+            <h3 class="text-white font-bold text-base mb-5 flex items-center gap-2">
+              <i class="fas fa-bolt text-pink-400 text-sm"></i>
+              How It Works
+            </h3>
+            <div class="space-y-4">
+              <div class="step">
+                <div class="step-num">1</div>
+                <div>
+                  <div class="text-white text-sm font-semibold">Enter Your Number</div>
+                  <div class="text-gray-400 text-xs mt-0.5">Use international format e.g. +923001234567</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">2</div>
+                <div>
+                  <div class="text-white text-sm font-semibold">Get Pair Code</div>
+                  <div class="text-gray-400 text-xs mt-0.5">A 8-digit code will appear on screen</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">3</div>
+                <div>
+                  <div class="text-white text-sm font-semibold">Enter in WhatsApp</div>
+                  <div class="text-gray-400 text-xs mt-0.5">Settings → Linked Devices → Link with phone number</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">4</div>
+                <div>
+                  <div class="text-white text-sm font-semibold">Receive Session ID</div>
+                  <div class="text-gray-400 text-xs mt-0.5">Session ID will be sent to your WhatsApp</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Warning -->
+          <div class="card p-6 fade-up delay-3 border-yellow-500/10">
+            <div class="flex gap-3">
+              <i class="fas fa-shield-alt text-yellow-400 mt-0.5 text-sm flex-shrink-0"></i>
+              <div>
+                <div class="text-white text-sm font-bold mb-1">Keep Your Session Safe</div>
+                <div class="text-gray-400 text-xs leading-relaxed">Never share your session ID with anyone. It gives full access to your WhatsApp account.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Links -->
+          <div class="card p-6 fade-up delay-4">
+            <div class="flex items-center justify-between">
+              <span class="text-gray-400 text-xs font-medium">Need help?</span>
+              <div class="flex gap-3">
+                <a href="https://github.com/ALI-INXIDE/STARK-MD" target="_blank"
+                   class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition font-medium">
+                  <i class="fab fa-github"></i> GitHub
                 </a>
+                <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank"
+                   class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-green-400 transition font-medium">
+                  <i class="fab fa-whatsapp"></i> Updates
+                </a>
+              </div>
             </div>
+          </div>
+
         </div>
+      </div>
+    </div>
+  </main>
 
-        <div class="text-center fade-in-up" style="transition-delay: 200ms;">
-            <a href="/" class="inline-flex items-center gap-2 text-gray-400 hover:text-pink-400 transition">
-                <i class="fas fa-arrow-left"></i>
-                <span>Back to Home</span>
-            </a>
-        </div>
-    </main>
+  <!-- Footer -->
+  <footer class="relative z-10 py-6 px-4 border-t border-white/5 text-center">
+    <p class="text-gray-600 text-xs">&copy; 2025 ALI INC. All rights reserved.</p>
+  </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
-    <script src="/js/script.js"></script>
-    <script>
-        const phoneInput = document.getElementById('phoneNumber');
-        const generateBtn = document.getElementById('generateBtn');
-        const codeDisplay = document.getElementById('codeDisplay');
-        const pairCode = document.getElementById('pairCode');
-        const copyBtn = document.getElementById('copyBtn');
-        const loading = document.getElementById('loading');
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+  <script>
+    // ─── Particles ───
+    const particleColors = ['rgba(236,72,153,0.4)', 'rgba(168,85,247,0.4)', 'rgba(249,168,212,0.3)'];
+    for (let i = 0; i < 25; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 6 + 2;
+      p.style.cssText = `
+        width:${size}px; height:${size}px;
+        background:${particleColors[Math.floor(Math.random()*3)]};
+        left:${Math.random()*100}%;
+        animation-duration:${Math.random()*20+15}s;
+        animation-delay:-${Math.random()*20}s;
+      `;
+      document.body.appendChild(p);
+    }
 
-        generateBtn.addEventListener('click', async () => {
-            const phone = phoneInput.value.trim().replace(/[^0-9]/g, '');
+    // ─── Elements ───
+    const submitBtn   = document.getElementById('submit');
+    const btnText     = document.getElementById('btn-text');
+    const numberInput = document.getElementById('number');
+    const output      = document.getElementById('output');
 
-            if (!phone || phone.length < 10) {
-                alert('Please enter a valid phone number with country code (e.g., 923197521693)');
-                return;
-            }
+    function showError(msg) {
+      output.innerHTML = `
+        <div class="error-box fade-up">
+          <i class="fas fa-exclamation-circle mr-2"></i>${msg}
+        </div>`;
+    }
 
-            generateBtn.disabled = true;
-            generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            loading.classList.remove('hidden');
-            codeDisplay.classList.add('hidden');
+    function showLoader() {
+      btnText.innerHTML = `<span class="loader mr-2"></span>Connecting...`;
+      submitBtn.disabled = true;
+    }
 
-            try {
-                console.log('Requesting pairing code for:', phone);
-                const response = await axios.get(`/code?phone=${phone}`);
-                
-                console.log('Response:', response.data);
-                
-                if (response.data.code) {
-                    pairCode.textContent = response.data.code;
-                    loading.classList.add('hidden');
-                    codeDisplay.classList.remove('hidden');
-                } else {
-                    throw new Error(response.data.error || 'Failed to generate code');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                const errorMessage = error.response?.data?.error || error.message || 'Failed to generate pairing code. Please try again.';
-                alert(errorMessage);
-                loading.classList.add('hidden');
-            } finally {
-                generateBtn.disabled = false;
-                generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
-        });
+    function resetBtn() {
+      btnText.innerHTML = `<i class="fas fa-key mr-2"></i>Generate Pair Code`;
+      submitBtn.disabled = false;
+    }
 
-        copyBtn.addEventListener('click', () => {
-            const code = pairCode.textContent;
-            navigator.clipboard.writeText(code).then(() => {
-                const originalText = copyBtn.innerHTML;
-                copyBtn.innerHTML = '<i class="fas fa-check"></i><span>Copied!</span>';
-                copyBtn.classList.add('bg-green-500/20', 'border-green-500');
-                
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalText;
-                    copyBtn.classList.remove('bg-green-500/20', 'border-green-500');
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-                alert('Failed to copy code. Please copy manually.');
-            });
-        });
+    async function copyText(text, el) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.cssText = 'position:fixed;opacity:0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        }
+        const orig = el.innerHTML;
+        el.innerHTML = `<div class="text-center py-1"><i class="fas fa-check text-green-400 mr-2"></i><span class="text-green-400 font-semibold text-sm">Copied!</span></div>`;
+        setTimeout(() => { el.innerHTML = orig; }, 2000);
+      } catch(e) {}
+    }
 
-        phoneInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                generateBtn.click();
-            }
-        });
-    </script>
+    submitBtn.addEventListener('click', async () => {
+      const raw = numberInput.value.trim();
+      if (!raw) return showError('Please enter your WhatsApp number.');
+
+      const digits = raw.replace(/[^0-9]/g, '');
+      if (digits.length < 10) return showError('Invalid number — use full international format.');
+
+      // Format display
+      numberInput.value = '+' + digits;
+      numberInput.style.color = 'white';
+
+      showLoader();
+      output.innerHTML = '';
+
+      try {
+        const { data } = await axios(`/code?number=${digits}`);
+        const code = data.code || 'Service Unavailable';
+        resetBtn();
+
+        // Check if session ID or pair code
+        const isSessionId = code.startsWith('STARK-MD_') || code.length > 20;
+
+        if (isSessionId) {
+          output.innerHTML = `
+            <div class="space-y-3 fade-up">
+              <div class="flex items-center gap-2 mb-1">
+                <i class="fas fa-check-circle text-green-400 text-sm"></i>
+                <span class="text-green-400 text-sm font-semibold">Session Generated!</span>
+              </div>
+              <div class="session-box" id="session-el" onclick="copyText('${code}', document.getElementById('session-el'))">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs text-gray-400 font-medium uppercase tracking-wide">Session ID</span>
+                  <i class="fas fa-copy text-gray-500 text-xs"></i>
+                </div>
+                <div class="session-value">${code}</div>
+              </div>
+              <p class="text-gray-500 text-xs text-center">Tap to copy • Also sent to your WhatsApp</p>
+            </div>`;
+        } else {
+          output.innerHTML = `
+            <div class="space-y-3 fade-up">
+              <div class="flex items-center gap-2 mb-1">
+                <div class="relative">
+                  <div class="w-2 h-2 bg-pink-400 rounded-full"></div>
+                  <div class="w-2 h-2 bg-pink-400 rounded-full absolute inset-0 pulse-ring"></div>
+                </div>
+                <span class="text-pink-400 text-sm font-semibold">Pair code ready — enter in WhatsApp</span>
+              </div>
+              <div class="code-box" id="code-el" onclick="copyText('${code}', document.getElementById('code-el'))">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs text-gray-400 font-medium uppercase tracking-wide">Pairing Code</span>
+                  <i class="fas fa-copy text-gray-500 text-xs"></i>
+                </div>
+                <div class="text-center">
+                  <span class="code-value">${code}</span>
+                </div>
+              </div>
+              <p class="text-gray-500 text-xs text-center">Tap to copy • Valid for 60 seconds</p>
+            </div>`;
+        }
+      } catch (err) {
+        resetBtn();
+        showError('Service unavailable. Please try again.');
+      }
+    });
+
+    // Enter key support
+    numberInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') submitBtn.click();
+    });
+  </script>
 </body>
 </html>
