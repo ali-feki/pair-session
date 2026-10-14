@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,21 +30,19 @@
                     <i class="fas fa-phone text-pink-400 mr-2"></i>
                     WhatsApp Phone Number
                 </label>
-                <input
-                    type="tel"
-                    id="phoneNumber"
-                    placeholder="e.g., 923197521693"
-                    inputmode="numeric"
+                <input 
+                    type="tel" 
+                    id="phoneNumber" 
+                    placeholder="e.g., 923197521693" 
+                    class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500 transition"
                     autocomplete="tel"
-                    class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/20 text-white placeholder-gray-500 focus:outline-none focus:border-pink-500 transition disabled:opacity-60"
                 >
                 <p class="text-gray-400 text-sm mt-2">Include country code without + or spaces</p>
             </div>
 
-            <button
-                id="generateBtn"
-                type="button"
-                class="w-full btn-glow text-white font-semibold py-4 px-8 rounded-xl shadow-2xl flex items-center justify-center gap-3 mb-6 transition"
+            <button 
+                id="generateBtn" 
+                class="w-full btn-glow text-white font-semibold py-4 px-8 rounded-xl shadow-2xl flex items-center justify-center gap-3 mb-6"
             >
                 <i class="fas fa-key"></i>
                 <span>Generate Pairing Code</span>
@@ -52,17 +51,15 @@
             <div id="loading" class="hidden text-center py-8">
                 <div class="inline-block w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mb-4"></div>
                 <p class="text-gray-300 font-semibold">Generating your code...</p>
-                <p class="text-gray-500 text-sm mt-2">This can take up to 30 seconds. Please wait.</p>
             </div>
 
             <div id="codeDisplay" class="hidden glass-effect rounded-xl p-6 text-center">
                 <p class="text-gray-300 mb-4">Your Pairing Code:</p>
                 <div class="bg-black/60 rounded-xl p-6 mb-4">
-                    <p id="pairCode" class="text-4xl font-black hero-title-gradient tracking-wider break-all"></p>
+                    <p id="pairCode" class="text-4xl font-black hero-title-gradient tracking-wider"></p>
                 </div>
-                <button
-                    id="copyBtn"
-                    type="button"
+                <button 
+                    id="copyBtn" 
                     class="w-full px-6 py-3 rounded-xl border-2 border-pink-500/30 text-pink-400 font-semibold hover:bg-pink-500/10 transition flex items-center justify-center gap-2"
                 >
                     <i class="fas fa-copy"></i>
@@ -119,184 +116,72 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
     <script src="/js/script.js"></script>
     <script>
-    (function () {
-        'use strict';
+        const phoneInput = document.getElementById('phoneNumber');
+        const generateBtn = document.getElementById('generateBtn');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const pairCode = document.getElementById('pairCode');
+        const copyBtn = document.getElementById('copyBtn');
+        const loading = document.getElementById('loading');
 
-        const phoneInput   = document.getElementById('phoneNumber');
-        const generateBtn  = document.getElementById('generateBtn');
-        const codeDisplay  = document.getElementById('codeDisplay');
-        const pairCodeEl   = document.getElementById('pairCode');
-        const copyBtn      = document.getElementById('copyBtn');
-        const loading      = document.getElementById('loading');
+        generateBtn.addEventListener('click', async () => {
+            const phone = phoneInput.value.trim().replace(/[^0-9]/g, '');
 
-        let isBusy = false;
-        let currentCode = '';
-        let copyTimer = null;
-
-        /* ---------- helpers ---------- */
-
-        const onlyDigits = (v) => (v || '').replace(/\D/g, '');
-
-        // accept: string | {code} | {pairingCode} | {data:{code}} | {result:{code}} ...
-        function extractCode(payload) {
-            if (!payload) return null;
-            if (typeof payload === 'string') return payload.trim() || null;
-
-            const candidates = [
-                payload.code,
-                payload.pairingCode,
-                payload.pairing_code,
-                payload.data && payload.data.code,
-                payload.data && payload.data.pairingCode,
-                payload.result && payload.result.code
-            ];
-            for (const c of candidates) {
-                if (typeof c === 'string' && c.trim()) return c.trim();
-            }
-            return null;
-        }
-
-        // error object bhi ho sakta hai, string bhi
-        function extractError(payload, fallback) {
-            if (!payload) return fallback;
-            if (typeof payload === 'string') return payload;
-
-            const e = payload.error ?? payload.message ??
-                      (payload.data && (payload.data.error ?? payload.data.message));
-            if (!e) return fallback;
-            if (typeof e === 'string') return e;
-            return e.message || JSON.stringify(e);
-        }
-
-        function setBusy(busy) {
-            isBusy = busy;
-            generateBtn.disabled = busy;
-            phoneInput.disabled  = busy;
-            generateBtn.classList.toggle('opacity-50', busy);
-            generateBtn.classList.toggle('cursor-not-allowed', busy);
-            loading.classList.toggle('hidden', !busy);
-        }
-
-        // clipboard API sirf HTTPS/localhost pe chalti hai -> fallback zaroori
-        async function copyToClipboard(text) {
-            if (navigator.clipboard && window.isSecureContext) {
-                try {
-                    await navigator.clipboard.writeText(text);
-                    return true;
-                } catch (_) { /* fall through */ }
-            }
-
-            try {
-                const ta = document.createElement('textarea');
-                ta.value = text;
-                ta.setAttribute('readonly', '');
-                ta.style.position = 'fixed';
-                ta.style.top = '-1000px';
-                ta.style.opacity = '0';
-                document.body.appendChild(ta);
-                ta.select();
-                ta.setSelectionRange(0, ta.value.length);
-                const ok = document.execCommand('copy');
-                document.body.removeChild(ta);
-                return ok;
-            } catch (_) {
-                return false;
-            }
-        }
-
-        /* ---------- main ---------- */
-
-        async function generateCode() {
-            if (isBusy) return;
-
-            const phone = onlyDigits(phoneInput.value);
-
-            // 10–15 digits, country code ke saath, 0 se start nahi
-            if (!/^[1-9]\d{9,14}$/.test(phone)) {
-                alert('Please enter a valid phone number with country code (10–15 digits, no + or spaces).\nExample: 923197521693');
-                phoneInput.focus();
+            if (!phone || phone.length < 10) {
+                alert('Please enter a valid phone number with country code (e.g., 923197521693)');
                 return;
             }
 
-            phoneInput.value = phone;
-            currentCode = '';
-            pairCodeEl.textContent = '';
+            generateBtn.disabled = true;
+            generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            loading.classList.remove('hidden');
             codeDisplay.classList.add('hidden');
 
-            setBusy(true);
-
             try {
-                const { data } = await axios.get('/code', {
-                    params: { phone: phone },   // axios khud encode karta hai
-                    timeout: 90000,             // pairing me waqt lagta hai
-                    headers: { Accept: 'application/json' }
-                });
-
-                const code = extractCode(data);
-                if (!code) {
-                    throw new Error(extractError(data, 'Server did not return a pairing code.'));
+                console.log('Requesting pairing code for:', phone);
+                const response = await axios.get(`/code?phone=${phone}`);
+                
+                console.log('Response:', response.data);
+                
+                if (response.data.code) {
+                    pairCode.textContent = response.data.code;
+                    loading.classList.add('hidden');
+                    codeDisplay.classList.remove('hidden');
+                } else {
+                    throw new Error(response.data.error || 'Failed to generate code');
                 }
-
-                currentCode = code;
-                pairCodeEl.textContent = code;
-                codeDisplay.classList.remove('hidden');
             } catch (error) {
-                let msg = 'Failed to generate pairing code. Please try again.';
-
-                if (error.response) {
-                    msg = extractError(error.response.data, 'Server error (' + error.response.status + ')');
-                } else if (error.code === 'ECONNABORTED') {
-                    msg = 'Request timed out. Server took too long — please try again.';
-                } else if (error.message) {
-                    msg = error.message;
-                }
-
-                console.error('Pairing error:', error);
-                alert(msg);
+                console.error('Error:', error);
+                const errorMessage = error.response?.data?.error || error.message || 'Failed to generate pairing code. Please try again.';
+                alert(errorMessage);
+                loading.classList.add('hidden');
             } finally {
-                setBusy(false);   // spinner hide + button enable, har haal me
+                generateBtn.disabled = false;
+                generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
-        }
+        });
 
-        /* ---------- events ---------- */
+        copyBtn.addEventListener('click', () => {
+            const code = pairCode.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i><span>Copied!</span>';
+                copyBtn.classList.add('bg-green-500/20', 'border-green-500');
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    copyBtn.classList.remove('bg-green-500/20', 'border-green-500');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy code. Please copy manually.');
+            });
+        });
 
-        generateBtn.addEventListener('click', generateCode);
-
-        // Enter key -> generate (busy ho to ignore)
-        phoneInput.addEventListener('keydown', (e) => {
+        phoneInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                e.preventDefault();
-                generateCode();
+                generateBtn.click();
             }
         });
-
-        // typing ke waqt sirf digits rakho
-        phoneInput.addEventListener('input', () => {
-            const cleaned = onlyDigits(phoneInput.value);
-            if (cleaned !== phoneInput.value) phoneInput.value = cleaned;
-        });
-
-        copyBtn.addEventListener('click', async () => {
-            const code = (currentCode || pairCodeEl.textContent || '').trim();
-            if (!code) return;
-
-            const ok = await copyToClipboard(code);
-            if (!ok) {
-                alert('Copy failed. Please copy manually:\n' + code);
-                return;
-            }
-
-            if (copyTimer) clearTimeout(copyTimer);
-            copyBtn.innerHTML = '<i class="fas fa-check"></i><span>Copied!</span>';
-            copyBtn.classList.add('bg-green-500/20', 'border-green-500');
-
-            copyTimer = setTimeout(() => {
-                copyBtn.innerHTML = '<i class="fas fa-copy"></i><span>Copy Code</span>';
-                copyBtn.classList.remove('bg-green-500/20', 'border-green-500');
-                copyTimer = null;
-            }, 2000);
-        });
-    })();
     </script>
 </body>
 </html>
