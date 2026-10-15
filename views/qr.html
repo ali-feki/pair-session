@@ -1,118 +1,579 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Scanner | ALI-MD</title>
-    <link rel="icon" href="https://files.catbox.moe/e5b2az.jpg" type="image/png">
-    <link rel="stylesheet" href="/css/style.css">
+    <title>ALI-MD · QR Pair</title>
+    <link rel="icon" href="https://files.catbox.moe/c30xpp.jpg" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --sky: #0ea5e9;
+            --cobalt: #2563eb;
+            --cyan: #22d3ee;
+            --light-sky: #7dd3fc;
+            --gold: #fbbf24;
+            --bg-dark: #05030f;
+            --bg-card: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ─── Aurora (Sky Blue) ─── */
+        .bg-layer {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        }
+        .bg-layer::before {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(ellipse 70% 50% at 15% 20%, rgba(14,165,233,0.20) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 60% at 85% 80%, rgba(37,99,235,0.16) 0%, transparent 60%);
+            animation: auroraShift 25s ease infinite;
+        }
+        @keyframes auroraShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(3deg); }
+        }
+        .grid-bg {
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(14,165,233,0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(14,165,233,0.045) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(ellipse 85% 65% at 50% 45%, black 35%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 45%, black 35%, transparent 100%);
+        }
+
+        /* ─── Navbar ─── */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            background: rgba(5,3,15,0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        .navbar.scrolled {
+            background: rgba(5,3,15,0.9);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .nav-link {
+            position: relative;
+            font-weight: 500;
+            color: rgba(255,255,255,0.7);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -6px; left: 0;
+            width: 0; height: 2px;
+            background: linear-gradient(90deg, var(--sky), var(--cobalt));
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover { color: white; }
+        .nav-link:hover::after { width: 100%; }
+
+        /* ─── Gradient Text ─── */
+        .gradient-text {
+            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 50%, #22d3ee 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 6s ease infinite;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* ─── Card ─── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.04) inset, 0 30px 80px rgba(0,0,0,0.5);
+            transition: box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover {
+            box-shadow: 0 0 0 1px rgba(14,165,233,0.15) inset, 0 30px 80px rgba(0,0,0,0.6), 0 0 80px rgba(14,165,233,0.12);
+        }
+
+        /* ─── Premium Ribbon ─── */
+        .premium-ribbon {
+            position: absolute;
+            top: 20px; right: -35px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #1a1a1a;
+            font-size: 9px; font-weight: 900;
+            padding: 4px 40px;
+            transform: rotate(45deg);
+            letter-spacing: 1.2px;
+            box-shadow: 0 4px 20px rgba(251,191,36,0.4);
+            z-index: 10;
+        }
+
+        /* ─── Badge ─── */
+        .badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px;
+            background: rgba(14,165,233,0.1);
+            border: 1px solid rgba(14,165,233,0.25);
+            border-radius: 100px;
+            font-size: 12px; font-weight: 600;
+            color: var(--light-sky);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .pulse-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%; background: #22c55e;
+            box-shadow: 0 0 0 0 rgba(34,197,94,0.7);
+            animation: pulseDot 2s infinite;
+            display: inline-block;
+        }
+        @keyframes pulseDot {
+            0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(34,197,94,0); }
+            100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+        }
+
+        /* ─── QR Frame (Sky Blue corners) ─── */
+        .qr-frame {
+            position: relative;
+            padding: 16px;
+            background: white;
+            border-radius: 20px;
+            box-shadow:
+                0 0 0 1px rgba(14,165,233,0.2),
+                0 0 40px rgba(14,165,233,0.15),
+                0 0 80px rgba(37,99,235,0.08),
+                0 20px 60px rgba(0,0,0,0.4);
+        }
+        .qr-frame::before, .qr-frame::after {
+            content: '';
+            position: absolute;
+            width: 28px; height: 28px;
+            border-style: solid;
+            border-color: #0ea5e9;
+        }
+        .qr-frame::before { top:-2px; left:-2px; border-width:3px 0 0 3px; border-radius:6px 0 0 0; }
+        .qr-frame::after  { bottom:-2px; right:-2px; border-width:0 3px 3px 0; border-radius:0 0 6px 0; }
+        .qr-inner { position: relative; }
+        .qr-inner::before, .qr-inner::after {
+            content: '';
+            position: absolute;
+            width: 28px; height: 28px;
+            border-style: solid;
+            border-color: #2563eb;
+        }
+        .qr-inner::before { top:-18px; right:-18px; border-width:3px 3px 0 0; border-radius:0 6px 0 0; }
+        .qr-inner::after  { bottom:-18px; left:-18px; border-width:0 0 3px 3px; border-radius:0 0 0 6px; }
+
+        /* ─── Scan Line ─── */
+        .scan-line {
+            position: absolute;
+            left: 16px; right: 16px; height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(14,165,233,0.9), transparent);
+            animation: scan 2.5s ease-in-out infinite;
+            border-radius: 1px; z-index: 2;
+            box-shadow: 0 0 15px rgba(14,165,233,0.8);
+        }
+        @keyframes scan {
+            0%   { top: 16px; opacity: 0; }
+            10%  { opacity: 1; }
+            90%  { opacity: 1; }
+            100% { top: calc(100% - 16px); opacity: 0; }
+        }
+
+        /* ─── Loader ─── */
+        .loader {
+            width: 48px; height: 48px;
+            border: 2px solid rgba(14,165,233,0.15);
+            border-top-color: #0ea5e9;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ─── Steps ─── */
+        .step { display: flex; align-items: flex-start; gap: 12px; }
+        .step-num {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: linear-gradient(135deg, rgba(14,165,233,0.2), rgba(37,99,235,0.2));
+            border: 1px solid rgba(14,165,233,0.4);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; color: var(--light-sky);
+            flex-shrink: 0;
+        }
+
+        /* ─── Animations ─── */
+        .fade-up { opacity:0; transform:translateY(20px); animation:fadeUp 0.6s ease forwards; }
+        @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
+        /* ─── Particles ─── */
+        .particle {
+            position: fixed; border-radius: 50%; pointer-events: none;
+            animation: floatUp linear infinite; z-index: 0;
+        }
+        @keyframes floatUp {
+            0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+            10%  { opacity: 1; }
+            90%  { opacity: 0.5; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        /* ─── Premium Footer ─── */
+        .footer-premium {
+            position: relative; z-index: 10;
+            background: rgba(5, 3, 15, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            margin-top: auto;
+            text-align: center;
+        }
+        .footer-premium::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 50%; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--sky), transparent);
+        }
+        .footer-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem; font-weight: 900;
+            color: white; margin-bottom: 0.6rem;
+            letter-spacing: 1px;
+        }
+        .footer-brand span { color: var(--sky); }
+        .footer-links {
+            display: flex; justify-content: center; gap: 1.2rem;
+            flex-wrap: wrap; margin-bottom: 0.8rem;
+        }
+        .footer-links a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none; font-size: 12px; font-weight: 600;
+            transition: 0.3s; display: flex; align-items: center; gap: 5px;
+        }
+        .footer-links a:hover { color: var(--sky); transform: translateY(-2px); }
+        .footer-copy {
+            font-size: 11px; color: rgba(255,255,255,0.3);
+            letter-spacing: 0.5px;
+        }
+        .footer-copy i { color: var(--sky); margin: 0 3px; animation: heartBeat 1.5s infinite; }
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* ─── Scrollbar ─── */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            border-radius: 4px;
+        }
+    </style>
 </head>
-<body class="antialiased min-h-screen flex items-center justify-center px-4">
-    <main class="w-full max-w-2xl">
-        <div class="text-center mb-8 fade-in-up">
-            <a href="/" class="inline-flex items-center space-x-3 mb-6">
-                <img src="https://files.catbox.moe/e5b2az.jpg" alt="ALI-MD Logo" class="w-16 h-16 rounded-full border-2 border-pink-500 shadow-lg">
-                <span class="text-3xl font-black hero-title-gradient">ALI-MD</span>
+<body>
+
+    <!-- ══════════ BACKGROUND ══════════ -->
+    <div class="bg-layer"><div class="grid-bg"></div></div>
+
+    <!-- ══════════ NAVBAR ══════════ -->
+    <header class="navbar" id="navbar">
+        <nav class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="./" class="flex items-center gap-3">
+                <img src="https://files.catbox.moe/c30xpp.jpg" alt="ALI-MD" class="w-9 h-9 rounded-full border-2 border-sky-500/50 shadow-lg">
+                <span class="font-black text-xl gradient-text" style="font-family:'Orbitron',sans-serif;letter-spacing:1px;">ALI-MD</span>
             </a>
-            <h1 class="text-4xl md:text-5xl font-black text-white mb-4">QR Code Pairing</h1>
-            <p class="text-lg text-gray-300">Scan the QR code to connect your WhatsApp</p>
-        </div>
-
-        <div class="feature-card-advanced rounded-2xl p-8 mb-6 fade-in-up" style="transition-delay: 100ms;">
-            <div id="qr-container" class="bg-white rounded-xl p-6 mb-6 flex items-center justify-center min-h-[300px]">
-                <div id="loading" class="text-center">
-                    <div class="inline-block w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                    <p class="text-gray-600 font-semibold">Generating QR Code...</p>
-                </div>
-                <img id="qr-image" class="hidden max-w-full h-auto" alt="QR Code">
+            <div class="hidden md:flex items-center gap-8">
+                <a href="./" class="nav-link">Home</a>
+                <a href="plugins.html" class="nav-link">Plugins</a>
+                <a href="/pair" class="nav-link">Pair Code</a>
+                <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-xl border border-sky-500/30 text-sky-400 hover:bg-sky-500/10 text-sm font-semibold transition">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
             </div>
+            <button onclick="window.location.href='./'" class="md:hidden text-white hover:text-sky-400 transition p-2">
+                <i class="fas fa-arrow-left text-xl"></i>
+            </button>
+        </nav>
+    </header>
 
-            <div class="space-y-4">
-                <div class="glass-effect rounded-xl p-4">
-                    <h3 class="text-white font-bold mb-3 flex items-center gap-2">
-                        <i class="fas fa-info-circle text-pink-400"></i>
-                        How to Scan
-                    </h3>
-                    <ol class="space-y-2 text-gray-300 text-sm">
-                        <li class="flex items-start gap-2">
-                            <span class="text-pink-400 font-bold">1.</span>
-                            <span>Open WhatsApp on your phone</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-pink-400 font-bold">2.</span>
-                            <span>Go to Settings → Linked Devices</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-pink-400 font-bold">3.</span>
-                            <span>Tap "Link a Device"</span>
-                        </li>
-                        <li class="flex items-start gap-2">
-                            <span class="text-pink-400 font-bold">4.</span>
-                            <span>Point your camera at the QR code above</span>
-                        </li>
-                    </ol>
+    <!-- ══════════ MAIN ══════════ -->
+    <main class="relative z-10 flex-1 flex items-center justify-center px-4 pt-28 pb-12">
+        <div class="w-full max-w-5xl mx-auto">
+            <div class="flex flex-col lg:flex-row gap-8 items-start">
+
+                <!-- ═══ LEFT: QR CARD ═══ -->
+                <div class="w-full lg:w-1/2">
+                    <div class="card p-8 fade-up" style="position:relative;">
+
+                        <!-- PREMIUM Ribbon -->
+                        <div class="premium-ribbon">PREMIUM</div>
+
+                        <!-- Header -->
+                        <div class="flex items-center gap-4 mb-8 fade-up delay-1">
+                            <div class="relative">
+                                <img src="https://files.catbox.moe/c30xpp.jpg" alt="ALI-MD" class="w-14 h-14 rounded-2xl border-2 border-sky-500/50 shadow-lg">
+                                <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[#05030f]"></div>
+                            </div>
+                            <div>
+                                <div class="font-black text-xl text-white" style="font-family:'Orbitron',sans-serif;">ALI-MD</div>
+                                <div class="text-xs text-gray-400 font-medium">WhatsApp Bot Platform</div>
+                            </div>
+                            <div class="ml-auto">
+                                <span class="badge"><i class="fas fa-qrcode text-xs"></i> QR Mode</span>
+                            </div>
+                        </div>
+
+                        <!-- Heading -->
+                        <div class="mb-8 fade-up delay-2">
+                            <h1 class="text-3xl font-black text-white mb-2">Scan <span class="gradient-text">QR Code</span></h1>
+                            <p class="text-gray-400 text-sm leading-relaxed">Open WhatsApp → Linked Devices → Link a Device → Scan below.</p>
+                        </div>
+
+                        <!-- QR Content -->
+                        <div class="fade-up delay-3">
+
+                            <!-- Loading -->
+                            <div id="loading" class="flex flex-col items-center gap-4 py-10">
+                                <div class="loader"></div>
+                                <p class="text-gray-400 text-sm font-medium">Generating QR code…</p>
+                            </div>
+
+                            <!-- QR Area -->
+                            <div id="qr-area" style="display:none" class="flex flex-col items-center gap-5">
+                                <div class="qr-frame">
+                                    <div class="scan-line"></div>
+                                    <div class="qr-inner">
+                                        <img id="qrImage" src="" alt="WhatsApp QR Code" style="width:240px;height:240px;display:block;border-radius:8px;">
+                                    </div>
+                                </div>
+                                <div id="status" class="text-sky-400 text-sm font-semibold text-center"></div>
+                            </div>
+
+                            <!-- Error Area -->
+                            <div id="error-area" style="display:none" class="flex flex-col items-center gap-4 py-8">
+                                <div class="w-12 h-12 rounded-full bg-sky-500/10 border border-sky-500/20 flex items-center justify-center">
+                                    <i class="fas fa-times text-sky-400"></i>
+                                </div>
+                                <p id="error-msg" class="text-sky-400 text-sm text-center font-medium"></p>
+                                <button onclick="loadQRCode()"
+                                    class="px-6 py-2.5 rounded-xl border border-sky-500/30 text-sky-400 hover:bg-sky-500/10 text-sm font-semibold transition">
+                                    <i class="fas fa-redo mr-2"></i>Retry
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
-                <div class="text-center">
-                    <p class="text-gray-400 text-sm mb-4">Or use phone number pairing instead</p>
-                    <a href="/pair" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border-2 border-pink-500/30 text-pink-400 font-semibold hover:bg-pink-500/10 transition">
-                        <i class="fas fa-phone"></i>
-                        <span>Use Phone Pairing</span>
-                    </a>
+                <!-- ═══ RIGHT: INFO ═══ -->
+                <div class="w-full lg:w-1/2 space-y-5">
+
+                    <!-- How to Scan -->
+                    <div class="card p-7 fade-up delay-2">
+                        <h3 class="text-white font-bold text-base mb-5 flex items-center gap-2">
+                            <i class="fas fa-bolt text-sky-400 text-sm"></i>
+                            How to Scan
+                        </h3>
+                        <div class="space-y-4" id="steps-container">
+                            <div class="step">
+                                <div class="step-num">1</div>
+                                <div>
+                                    <div class="text-white text-sm font-semibold">Open WhatsApp</div>
+                                    <div class="text-gray-400 text-xs mt-0.5">Launch WhatsApp on your phone</div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">2</div>
+                                <div>
+                                    <div class="text-white text-sm font-semibold">Go to Linked Devices</div>
+                                    <div class="text-gray-400 text-xs mt-0.5">Tap 3-dot menu → Linked Devices</div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">3</div>
+                                <div>
+                                    <div class="text-white text-sm font-semibold">Tap Link a Device</div>
+                                    <div class="text-gray-400 text-xs mt-0.5">Then point camera at QR code</div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-num">4</div>
+                                <div>
+                                    <div class="text-white text-sm font-semibold">Session Received</div>
+                                    <div class="text-gray-400 text-xs mt-0.5">Session ID will be sent to your WhatsApp</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prefer Code Instead -->
+                    <div class="card p-6 fade-up delay-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-white text-sm font-bold mb-1">Prefer a code instead?</div>
+                                <div class="text-gray-400 text-xs">Use phone number pairing — no camera needed</div>
+                            </div>
+                            <a href="/pair"
+                                class="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-400 hover:bg-sky-500/20 text-xs font-bold transition">
+                                <i class="fas fa-link"></i> Pair Code
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Warning -->
+                    <div class="card p-6 fade-up delay-4">
+                        <div class="flex gap-3">
+                            <i class="fas fa-shield-alt text-yellow-400 mt-0.5 text-sm flex-shrink-0"></i>
+                            <div>
+                                <div class="text-white text-sm font-bold mb-1">Keep Your Session Safe</div>
+                                <div class="text-gray-400 text-xs leading-relaxed">QR expires in 60 seconds. Never share your session ID with anyone.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feature Chips -->
+                    <div class="card p-6 fade-up delay-4">
+                        <h4 class="text-white text-sm font-bold mb-4 flex items-center gap-2">
+                            <i class="fas fa-star text-yellow-400 text-xs"></i> Features
+                        </h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-[10px] font-semibold px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300"><i class="fas fa-bolt text-sky-400 text-[9px] mr-1"></i>Instant</span>
+                            <span class="text-[10px] font-semibold px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300"><i class="fas fa-shield-alt text-sky-400 text-[9px] mr-1"></i>Encrypted</span>
+                            <span class="text-[10px] font-semibold px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300"><i class="fas fa-key text-sky-400 text-[9px] mr-1"></i>Multi-Device</span>
+                            <span class="text-[10px] font-semibold px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-gray-300"><i class="fas fa-infinity text-sky-400 text-[9px] mr-1"></i>Free Forever</span>
+                        </div>
+                    </div>
+
+                    <!-- Help Links -->
+                    <div class="card p-6 fade-up delay-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400 text-xs font-medium">Need help?</span>
+                            <div class="flex gap-3">
+                                <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener"
+                                    class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition font-medium">
+                                    <i class="fab fa-github"></i> GitHub
+                                </a>
+                                <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" rel="noopener"
+                                    class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-green-400 transition font-medium">
+                                    <i class="fab fa-whatsapp"></i> Updates
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
-
-        <div class="text-center fade-in-up" style="transition-delay: 200ms;">
-            <a href="/" class="inline-flex items-center gap-2 text-gray-400 hover:text-pink-400 transition">
-                <i class="fas fa-arrow-left"></i>
-                <span>Back to Home</span>
-            </a>
         </div>
     </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.0/socket.io.min.js"></script>
-    <script src="/js/script.js"></script>
+    <!-- ══════════ PREMIUM FOOTER ══════════ -->
+    <footer class="footer-premium">
+        <div class="footer-brand">ALI<span>-MD</span></div>
+        <div class="footer-links">
+            <a href="./"><i class="fas fa-home"></i> Home</a>
+            <a href="plugins.html"><i class="fas fa-puzzle-piece"></i> Plugins</a>
+            <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+            <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> Channel</a>
+        </div>
+        <div class="footer-copy">
+            &copy; 2026 ALI-MD. All rights reserved. Made with <i class="fas fa-heart"></i> for the community.
+        </div>
+    </footer>
+
     <script>
-        const qrImage = document.getElementById('qr-image');
-        const loading = document.getElementById('loading');
+        // ─── Navbar Scroll ───
+        window.addEventListener('scroll', () => {
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+        });
 
-        async function getQRCode() {
+        // ─── Particles (Sky Blue) ───
+        const cols = ['rgba(14,165,233,0.5)', 'rgba(37,99,235,0.5)', 'rgba(34,211,238,0.4)'];
+        for (let i = 0; i < 25; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const s = Math.random() * 6 + 2;
+            p.style.cssText = `width:${s}px;height:${s}px;background:${cols[Math.floor(Math.random()*3)]};left:${Math.random()*100}%;animation-duration:${Math.random()*20+15}s;animation-delay:-${Math.random()*20}s;box-shadow:0 0 12px currentColor;`;
+            document.body.appendChild(p);
+        }
+
+        // ─── QR Logic (Unchanged) ───
+        async function loadQRCode() {
+            const loading   = document.getElementById('loading');
+            const qrArea    = document.getElementById('qr-area');
+            const errorArea = document.getElementById('error-area');
+
+            loading.style.display   = 'flex';
+            qrArea.style.display    = 'none';
+            errorArea.style.display = 'none';
+
             try {
-                console.log('Fetching QR code...');
-                const response = await fetch('/qr');
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log('QR Response:', data);
+                const res  = await fetch('/qr');
+                const data = await res.json();
 
-                if (data.success && data.qr) {
-                    qrImage.src = data.qr;
-                    qrImage.classList.remove('hidden');
-                    loading.classList.add('hidden');
-                    console.log('QR code displayed successfully');
-                } else if (data.error) {
-                    loading.innerHTML = `<p class="text-red-600 font-semibold">${data.error}</p>`;
+                if (data.qr) {
+                    document.getElementById('qrImage').src = data.qr;
+                    document.getElementById('status').textContent = data.message || '📱 Scan with WhatsApp';
+
+                    if (data.instructions && data.instructions.length) {
+                        const c = document.getElementById('steps-container');
+                        c.innerHTML = '';
+                        data.instructions.forEach((step, i) => {
+                            const text = step.replace(/^\d+\.\s*/, '');
+                            c.innerHTML += `
+                                <div class="step">
+                                    <div class="step-num">${i + 1}</div>
+                                    <div class="text-gray-300 text-xs leading-relaxed">${text}</div>
+                                </div>`;
+                        });
+                    }
+
+                    loading.style.display = 'none';
+                    qrArea.style.display  = 'flex';
                 } else {
-                    loading.innerHTML = '<p class="text-red-600 font-semibold">No QR code received. Please refresh.</p>';
+                    throw new Error(data.code || 'No QR data received');
                 }
-            } catch (error) {
-                console.error('Error fetching QR code:', error);
-                loading.innerHTML = `<p class="text-red-600 font-semibold">Failed to load QR code: ${error.message}. Please refresh the page.</p>`;
+            } catch (err) {
+                document.getElementById('error-msg').textContent = err.message || 'Failed to load QR code';
+                loading.style.display   = 'none';
+                errorArea.style.display = 'flex';
             }
         }
 
-        // Start fetching QR code when page loads
-        window.addEventListener('load', getQRCode);
+        loadQRCode();
     </script>
 </body>
 </html>
