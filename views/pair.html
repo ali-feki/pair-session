@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALI-MD · Pair Code</title>
+    <title>ALI-MD · QR Pair</title>
     <link rel="icon" href="https://files.catbox.moe/c30xpp.jpg" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,6 @@
             --bg-dark: #05030f;
             --bg-card: rgba(255,255,255,0.04);
             --border: rgba(255,255,255,0.08);
-            --border-sky: rgba(14,165,233,0.4);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,7 +36,7 @@
             position: relative;
         }
 
-        /* ─── Aurora Background (Sky Blue) ─── */
+        /* ─── Aurora (Sky Blue) ─── */
         .bg-layer {
             position: fixed; inset: 0; z-index: 0; pointer-events: none;
         }
@@ -46,8 +45,7 @@
             position: absolute; inset: 0;
             background:
                 radial-gradient(ellipse 70% 50% at 15% 20%, rgba(14,165,233,0.20) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 60% at 85% 80%, rgba(37,99,235,0.16) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 40% at 50% 50%, rgba(34,211,238,0.07) 0%, transparent 70%);
+                radial-gradient(ellipse 60% 60% at 85% 80%, rgba(37,99,235,0.16) 0%, transparent 60%);
             animation: auroraShift 25s ease infinite;
         }
         @keyframes auroraShift {
@@ -117,19 +115,13 @@
             border-radius: 24px;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            box-shadow:
-                0 0 0 1px rgba(255,255,255,0.04) inset,
-                0 30px 80px rgba(0,0,0,0.5),
-                0 0 60px rgba(14,165,233,0.06);
-            transition: box-shadow 0.4s ease, transform 0.4s ease;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.04) inset, 0 30px 80px rgba(0,0,0,0.5);
+            transition: box-shadow 0.4s ease;
             position: relative;
             overflow: hidden;
         }
         .card:hover {
-            box-shadow:
-                0 0 0 1px rgba(14,165,233,0.15) inset,
-                0 30px 80px rgba(0,0,0,0.6),
-                0 0 80px rgba(14,165,233,0.12);
+            box-shadow: 0 0 0 1px rgba(14,165,233,0.15) inset, 0 30px 80px rgba(0,0,0,0.6), 0 0 80px rgba(14,165,233,0.12);
         }
 
         /* ─── Premium Ribbon ─── */
@@ -145,174 +137,6 @@
             box-shadow: 0 4px 20px rgba(251,191,36,0.4);
             z-index: 10;
         }
-
-        /* ─── Input ─── */
-        .phone-input {
-            width: 100%;
-            background: rgba(0,0,0,0.35);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 16px 20px 16px 44px;
-            color: white;
-            font-family: 'Inter', sans-serif;
-            font-size: 16px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            outline: none;
-        }
-        .phone-input:focus {
-            border-color: rgba(14,165,233,0.6);
-            background: rgba(0,0,0,0.45);
-            box-shadow: 0 0 0 3px rgba(14,165,233,0.1), 0 0 30px rgba(14,165,233,0.15);
-        }
-        .phone-input::placeholder { color: rgba(255,255,255,0.25); }
-
-        /* ─── Button ─── */
-        .btn-primary {
-            width: 100%;
-            padding: 16px 24px;
-            background: linear-gradient(135deg, #0ea5e9, #2563eb);
-            background-size: 200% 200%;
-            animation: gradientShift 5s ease infinite;
-            border: none;
-            border-radius: 14px;
-            color: white;
-            font-family: 'Inter', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(14,165,233,0.3);
-        }
-        .btn-primary::before {
-            content: '';
-            position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-            transition: left 0.6s ease;
-        }
-        .btn-primary:hover::before { left: 100%; }
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 45px rgba(14,165,233,0.5);
-        }
-        .btn-primary:disabled {
-            opacity: 0.5; cursor: not-allowed; transform: none;
-            box-shadow: none; animation: none;
-        }
-        .btn-primary:active { transform: translateY(-1px); }
-
-        /* ─── Code Display ─── */
-        .code-box {
-            background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(14,165,233,0.35);
-            border-radius: 16px;
-            padding: 20px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .code-box::before {
-            content: '';
-            position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(14,165,233,0.06), rgba(37,99,235,0.06));
-            opacity: 0; transition: opacity 0.3s;
-        }
-        .code-box:hover::before { opacity: 1; }
-        .code-box:hover {
-            border-color: rgba(14,165,233,0.7);
-            box-shadow: 0 0 25px rgba(14,165,233,0.2);
-        }
-        .code-value {
-            font-family: 'Space Mono', monospace;
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: 4px;
-            background: linear-gradient(135deg, #0ea5e9, #22d3ee);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            word-break: break-all;
-        }
-
-        /* ─── Session Box ─── */
-        .session-box {
-            background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(37,99,235,0.35);
-            border-radius: 16px;
-            padding: 20px 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .session-box:hover {
-            border-color: rgba(37,99,235,0.7);
-            box-shadow: 0 0 25px rgba(37,99,235,0.2);
-        }
-        .session-value {
-            font-family: 'Space Mono', monospace;
-            font-size: 12px;
-            color: rgba(255,255,255,0.85);
-            word-break: break-all;
-            line-height: 1.6;
-        }
-
-        /* ─── Error Box ─── */
-        .error-box {
-            background: rgba(14,165,233,0.08);
-            border: 1px solid rgba(14,165,233,0.3);
-            border-radius: 12px;
-            padding: 14px 18px;
-            color: var(--light-sky);
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        /* ─── Steps ─── */
-        .step { display: flex; align-items: flex-start; gap: 14px; }
-        .step-num {
-            width: 30px; height: 30px; border-radius: 50%;
-            background: linear-gradient(135deg, rgba(14,165,233,0.2), rgba(37,99,235,0.2));
-            border: 1px solid rgba(14,165,233,0.4);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 700; color: var(--light-sky);
-            flex-shrink: 0;
-        }
-
-        /* ─── Loader ─── */
-        .loader {
-            width: 18px; height: 18px;
-            border: 2.5px solid rgba(255,255,255,0.25);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            display: inline-block;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ─── Pulse Ring ─── */
-        @keyframes pulseRing {
-            0% { transform: scale(1); opacity: 0.6; }
-            100% { transform: scale(1.5); opacity: 0; }
-        }
-        .pulse-ring {
-            animation: pulseRing 1.5s ease-out infinite;
-        }
-
-        /* ─── Fade Up ─── */
-        .fade-up {
-            opacity: 0; transform: translateY(20px);
-            animation: fadeUp 0.6s ease forwards;
-        }
-        @keyframes fadeUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.2s; }
-        .delay-3 { animation-delay: 0.3s; }
-        .delay-4 { animation-delay: 0.4s; }
 
         /* ─── Badge ─── */
         .badge {
@@ -339,22 +163,96 @@
             100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
         }
 
+        /* ─── QR Frame (Sky Blue corners) ─── */
+        .qr-frame {
+            position: relative;
+            padding: 16px;
+            background: white;
+            border-radius: 20px;
+            box-shadow:
+                0 0 0 1px rgba(14,165,233,0.2),
+                0 0 40px rgba(14,165,233,0.15),
+                0 0 80px rgba(37,99,235,0.08),
+                0 20px 60px rgba(0,0,0,0.4);
+        }
+        .qr-frame::before, .qr-frame::after {
+            content: '';
+            position: absolute;
+            width: 28px; height: 28px;
+            border-style: solid;
+            border-color: #0ea5e9;
+        }
+        .qr-frame::before { top:-2px; left:-2px; border-width:3px 0 0 3px; border-radius:6px 0 0 0; }
+        .qr-frame::after  { bottom:-2px; right:-2px; border-width:0 3px 3px 0; border-radius:0 0 6px 0; }
+        .qr-inner { position: relative; }
+        .qr-inner::before, .qr-inner::after {
+            content: '';
+            position: absolute;
+            width: 28px; height: 28px;
+            border-style: solid;
+            border-color: #2563eb;
+        }
+        .qr-inner::before { top:-18px; right:-18px; border-width:3px 3px 0 0; border-radius:0 6px 0 0; }
+        .qr-inner::after  { bottom:-18px; left:-18px; border-width:0 0 3px 3px; border-radius:0 0 0 6px; }
+
+        /* ─── Scan Line ─── */
+        .scan-line {
+            position: absolute;
+            left: 16px; right: 16px; height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(14,165,233,0.9), transparent);
+            animation: scan 2.5s ease-in-out infinite;
+            border-radius: 1px; z-index: 2;
+            box-shadow: 0 0 15px rgba(14,165,233,0.8);
+        }
+        @keyframes scan {
+            0%   { top: 16px; opacity: 0; }
+            10%  { opacity: 1; }
+            90%  { opacity: 1; }
+            100% { top: calc(100% - 16px); opacity: 0; }
+        }
+
+        /* ─── Loader ─── */
+        .loader {
+            width: 48px; height: 48px;
+            border: 2px solid rgba(14,165,233,0.15);
+            border-top-color: #0ea5e9;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ─── Steps ─── */
+        .step { display: flex; align-items: flex-start; gap: 12px; }
+        .step-num {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: linear-gradient(135deg, rgba(14,165,233,0.2), rgba(37,99,235,0.2));
+            border: 1px solid rgba(14,165,233,0.4);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; color: var(--light-sky);
+            flex-shrink: 0;
+        }
+
+        /* ─── Animations ─── */
+        .fade-up { opacity:0; transform:translateY(20px); animation:fadeUp 0.6s ease forwards; }
+        @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+
         /* ─── Particles ─── */
         .particle {
-            position: fixed;
-            border-radius: 50%;
-            pointer-events: none;
-            animation: floatUp linear infinite;
-            z-index: 0;
+            position: fixed; border-radius: 50%; pointer-events: none;
+            animation: floatUp linear infinite; z-index: 0;
         }
         @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 0.5; }
+            0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+            10%  { opacity: 1; }
+            90%  { opacity: 0.5; }
             100% { transform: translateY(-10vh) scale(1); opacity: 0; }
         }
 
-        /* ─── Footer ─── */
+        /* ─── Premium Footer ─── */
         .footer-premium {
             position: relative; z-index: 10;
             background: rgba(5, 3, 15, 0.8);
@@ -409,9 +307,7 @@
 <body>
 
     <!-- ══════════ BACKGROUND ══════════ -->
-    <div class="bg-layer">
-        <div class="grid-bg"></div>
-    </div>
+    <div class="bg-layer"><div class="grid-bg"></div></div>
 
     <!-- ══════════ NAVBAR ══════════ -->
     <header class="navbar" id="navbar">
@@ -423,7 +319,7 @@
             <div class="hidden md:flex items-center gap-8">
                 <a href="./" class="nav-link">Home</a>
                 <a href="plugins.html" class="nav-link">Plugins</a>
-                <a href="/qrpage" class="nav-link">QR Pair</a>
+                <a href="/pair" class="nav-link">Pair Code</a>
                 <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-xl border border-sky-500/30 text-sky-400 hover:bg-sky-500/10 text-sm font-semibold transition">
                     <i class="fab fa-github"></i> GitHub
                 </a>
@@ -437,17 +333,16 @@
     <!-- ══════════ MAIN ══════════ -->
     <main class="relative z-10 flex-1 flex items-center justify-center px-4 pt-28 pb-12">
         <div class="w-full max-w-5xl mx-auto">
-
             <div class="flex flex-col lg:flex-row gap-8 items-start">
 
-                <!-- ═══ LEFT: FORM ═══ -->
+                <!-- ═══ LEFT: QR CARD ═══ -->
                 <div class="w-full lg:w-1/2">
                     <div class="card p-8 fade-up" style="position:relative;">
 
                         <!-- PREMIUM Ribbon -->
                         <div class="premium-ribbon">PREMIUM</div>
 
-                        <!-- Logo -->
+                        <!-- Header -->
                         <div class="flex items-center gap-4 mb-8 fade-up delay-1">
                             <div class="relative">
                                 <img src="https://files.catbox.moe/c30xpp.jpg" alt="ALI-MD" class="w-14 h-14 rounded-2xl border-2 border-sky-500/50 shadow-lg">
@@ -458,97 +353,120 @@
                                 <div class="text-xs text-gray-400 font-medium">WhatsApp Bot Platform</div>
                             </div>
                             <div class="ml-auto">
-                                <span class="badge"><span class="pulse-dot"></span> Online</span>
+                                <span class="badge"><i class="fas fa-qrcode text-xs"></i> QR Mode</span>
                             </div>
                         </div>
 
                         <!-- Heading -->
                         <div class="mb-8 fade-up delay-2">
-                            <h1 class="text-3xl font-black text-white mb-2">Get Your <span class="gradient-text">Pair Code</span></h1>
-                            <p class="text-gray-400 text-sm leading-relaxed">Enter your WhatsApp number with country code to generate your pairing code instantly.</p>
+                            <h1 class="text-3xl font-black text-white mb-2">Scan <span class="gradient-text">QR Code</span></h1>
+                            <p class="text-gray-400 text-sm leading-relaxed">Open WhatsApp → Linked Devices → Link a Device → Scan below.</p>
                         </div>
 
-                        <!-- Input -->
-                        <div class="space-y-4 fade-up delay-3">
-                            <div class="relative">
-                                <div class="absolute left-4 top-1/2 -translate-y-1/2 text-sky-400">
-                                    <i class="fas fa-phone text-sm"></i>
-                                </div>
-                                <input
-                                    type="tel"
-                                    inputmode="tel"
-                                    id="number"
-                                    placeholder="+92 3XX XXXXXXX"
-                                    autocomplete="tel"
-                                    class="phone-input"
-                                />
+                        <!-- QR Content -->
+                        <div class="fade-up delay-3">
+
+                            <!-- Loading -->
+                            <div id="loading" class="flex flex-col items-center gap-4 py-10">
+                                <div class="loader"></div>
+                                <p class="text-gray-400 text-sm font-medium">Generating QR code…</p>
                             </div>
 
-                            <button id="submit" class="btn-primary">
-                                <span id="btn-text"><i class="fas fa-key mr-2"></i>Generate Pair Code</span>
-                            </button>
+                            <!-- QR Area -->
+                            <div id="qr-area" style="display:none" class="flex flex-col items-center gap-5">
+                                <div class="qr-frame">
+                                    <div class="scan-line"></div>
+                                    <div class="qr-inner">
+                                        <img id="qrImage" src="" alt="WhatsApp QR Code" style="width:240px;height:240px;display:block;border-radius:8px;">
+                                    </div>
+                                </div>
+                                <div id="status" class="text-sky-400 text-sm font-semibold text-center"></div>
+                            </div>
+
+                            <!-- Error Area -->
+                            <div id="error-area" style="display:none" class="flex flex-col items-center gap-4 py-8">
+                                <div class="w-12 h-12 rounded-full bg-sky-500/10 border border-sky-500/20 flex items-center justify-center">
+                                    <i class="fas fa-times text-sky-400"></i>
+                                </div>
+                                <p id="error-msg" class="text-sky-400 text-sm text-center font-medium"></p>
+                                <button onclick="loadQRCode()"
+                                    class="px-6 py-2.5 rounded-xl border border-sky-500/30 text-sky-400 hover:bg-sky-500/10 text-sm font-semibold transition">
+                                    <i class="fas fa-redo mr-2"></i>Retry
+                                </button>
+                            </div>
+
                         </div>
-
-                        <!-- Output -->
-                        <div id="output" class="mt-6"></div>
-
                     </div>
                 </div>
 
                 <!-- ═══ RIGHT: INFO ═══ -->
                 <div class="w-full lg:w-1/2 space-y-5">
 
-                    <!-- How it works -->
+                    <!-- How to Scan -->
                     <div class="card p-7 fade-up delay-2">
                         <h3 class="text-white font-bold text-base mb-5 flex items-center gap-2">
                             <i class="fas fa-bolt text-sky-400 text-sm"></i>
-                            How It Works
+                            How to Scan
                         </h3>
-                        <div class="space-y-4">
+                        <div class="space-y-4" id="steps-container">
                             <div class="step">
                                 <div class="step-num">1</div>
                                 <div>
-                                    <div class="text-white text-sm font-semibold">Enter Your Number</div>
-                                    <div class="text-gray-400 text-xs mt-0.5">Use international format e.g. +923001234567</div>
+                                    <div class="text-white text-sm font-semibold">Open WhatsApp</div>
+                                    <div class="text-gray-400 text-xs mt-0.5">Launch WhatsApp on your phone</div>
                                 </div>
                             </div>
                             <div class="step">
                                 <div class="step-num">2</div>
                                 <div>
-                                    <div class="text-white text-sm font-semibold">Get Pair Code</div>
-                                    <div class="text-gray-400 text-xs mt-0.5">An 8-digit code will appear on screen</div>
+                                    <div class="text-white text-sm font-semibold">Go to Linked Devices</div>
+                                    <div class="text-gray-400 text-xs mt-0.5">Tap 3-dot menu → Linked Devices</div>
                                 </div>
                             </div>
                             <div class="step">
                                 <div class="step-num">3</div>
                                 <div>
-                                    <div class="text-white text-sm font-semibold">Enter in WhatsApp</div>
-                                    <div class="text-gray-400 text-xs mt-0.5">Settings → Linked Devices → Link with phone number</div>
+                                    <div class="text-white text-sm font-semibold">Tap Link a Device</div>
+                                    <div class="text-gray-400 text-xs mt-0.5">Then point camera at QR code</div>
                                 </div>
                             </div>
                             <div class="step">
                                 <div class="step-num">4</div>
                                 <div>
-                                    <div class="text-white text-sm font-semibold">Receive Session ID</div>
+                                    <div class="text-white text-sm font-semibold">Session Received</div>
                                     <div class="text-gray-400 text-xs mt-0.5">Session ID will be sent to your WhatsApp</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Warning -->
+                    <!-- Prefer Code Instead -->
                     <div class="card p-6 fade-up delay-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-white text-sm font-bold mb-1">Prefer a code instead?</div>
+                                <div class="text-gray-400 text-xs">Use phone number pairing — no camera needed</div>
+                            </div>
+                            <a href="/pair"
+                                class="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-400 hover:bg-sky-500/20 text-xs font-bold transition">
+                                <i class="fas fa-link"></i> Pair Code
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Warning -->
+                    <div class="card p-6 fade-up delay-4">
                         <div class="flex gap-3">
                             <i class="fas fa-shield-alt text-yellow-400 mt-0.5 text-sm flex-shrink-0"></i>
                             <div>
                                 <div class="text-white text-sm font-bold mb-1">Keep Your Session Safe</div>
-                                <div class="text-gray-400 text-xs leading-relaxed">Never share your session ID with anyone. It gives full access to your WhatsApp account.</div>
+                                <div class="text-gray-400 text-xs leading-relaxed">QR expires in 60 seconds. Never share your session ID with anyone.</div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Feature Chips -->
-                    <div class="card p-6 fade-up delay-3">
+                    <div class="card p-6 fade-up delay-4">
                         <h4 class="text-white text-sm font-bold mb-4 flex items-center gap-2">
                             <i class="fas fa-star text-yellow-400 text-xs"></i> Features
                         </h4>
@@ -560,15 +478,17 @@
                         </div>
                     </div>
 
-                    <!-- Links -->
+                    <!-- Help Links -->
                     <div class="card p-6 fade-up delay-4">
                         <div class="flex items-center justify-between">
                             <span class="text-gray-400 text-xs font-medium">Need help?</span>
                             <div class="flex gap-3">
-                                <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener" class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition font-medium">
+                                <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener"
+                                    class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-white transition font-medium">
                                     <i class="fab fa-github"></i> GitHub
                                 </a>
-                                <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" rel="noopener" class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-green-400 transition font-medium">
+                                <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" rel="noopener"
+                                    class="flex items-center gap-1.5 text-xs text-gray-400 hover:text-green-400 transition font-medium">
                                     <i class="fab fa-whatsapp"></i> Updates
                                 </a>
                             </div>
@@ -594,7 +514,6 @@
         </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
     <script>
         // ─── Navbar Scroll ───
         window.addEventListener('scroll', () => {
@@ -602,133 +521,59 @@
         });
 
         // ─── Particles (Sky Blue) ───
-        const particleColors = ['rgba(14,165,233,0.5)', 'rgba(37,99,235,0.5)', 'rgba(34,211,238,0.4)'];
+        const cols = ['rgba(14,165,233,0.5)', 'rgba(37,99,235,0.5)', 'rgba(34,211,238,0.4)'];
         for (let i = 0; i < 25; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
-            const size = Math.random() * 6 + 2;
-            p.style.cssText = `
-                width:${size}px; height:${size}px;
-                background:${particleColors[Math.floor(Math.random()*3)]};
-                left:${Math.random()*100}%;
-                animation-duration:${Math.random()*20+15}s;
-                animation-delay:-${Math.random()*20}s;
-                box-shadow: 0 0 12px currentColor;
-            `;
+            const s = Math.random() * 6 + 2;
+            p.style.cssText = `width:${s}px;height:${s}px;background:${cols[Math.floor(Math.random()*3)]};left:${Math.random()*100}%;animation-duration:${Math.random()*20+15}s;animation-delay:-${Math.random()*20}s;box-shadow:0 0 12px currentColor;`;
             document.body.appendChild(p);
         }
 
-        // ─── Elements ───
-        const submitBtn   = document.getElementById('submit');
-        const btnText     = document.getElementById('btn-text');
-        const numberInput = document.getElementById('number');
-        const output      = document.getElementById('output');
+        // ─── QR Logic (Unchanged) ───
+        async function loadQRCode() {
+            const loading   = document.getElementById('loading');
+            const qrArea    = document.getElementById('qr-area');
+            const errorArea = document.getElementById('error-area');
 
-        function showError(msg) {
-            output.innerHTML = `
-                <div class="error-box fade-up">
-                    <i class="fas fa-exclamation-circle mr-2"></i>${msg}
-                </div>`;
-        }
-
-        function showLoader() {
-            btnText.innerHTML = `<span class="loader mr-2"></span>Connecting...`;
-            submitBtn.disabled = true;
-        }
-
-        function resetBtn() {
-            btnText.innerHTML = `<i class="fas fa-key mr-2"></i>Generate Pair Code`;
-            submitBtn.disabled = false;
-        }
-
-        async function copyText(text, el) {
-            try {
-                if (navigator.clipboard && window.isSecureContext) {
-                    await navigator.clipboard.writeText(text);
-                } else {
-                    const ta = document.createElement('textarea');
-                    ta.value = text;
-                    ta.style.cssText = 'position:fixed;opacity:0';
-                    document.body.appendChild(ta);
-                    ta.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(ta);
-                }
-                const orig = el.innerHTML;
-                el.innerHTML = `<div class="text-center py-1"><i class="fas fa-check text-green-400 mr-2"></i><span class="text-green-400 font-semibold text-sm">Copied!</span></div>`;
-                setTimeout(() => { el.innerHTML = orig; }, 2000);
-            } catch(e) {}
-        }
-
-        submitBtn.addEventListener('click', async () => {
-            const raw = numberInput.value.trim();
-            if (!raw) return showError('Please enter your WhatsApp number.');
-
-            const digits = raw.replace(/[^0-9]/g, '');
-            if (digits.length < 10) return showError('Invalid number — use full international format.');
-
-            numberInput.value = '+' + digits;
-            numberInput.style.color = 'white';
-
-            showLoader();
-            output.innerHTML = '';
+            loading.style.display   = 'flex';
+            qrArea.style.display    = 'none';
+            errorArea.style.display = 'none';
 
             try {
-                const { data } = await axios(`/code?number=${digits}`);
-                const code = data.code || 'Service Unavailable';
-                resetBtn();
+                const res  = await fetch('/qr');
+                const data = await res.json();
 
-                // Check if session ID or pair code
-                const isSessionId = code.startsWith('ALI-MD_') || code.length > 20;
+                if (data.qr) {
+                    document.getElementById('qrImage').src = data.qr;
+                    document.getElementById('status').textContent = data.message || '📱 Scan with WhatsApp';
 
-                if (isSessionId) {
-                    output.innerHTML = `
-                        <div class="space-y-3 fade-up">
-                            <div class="flex items-center gap-2 mb-1">
-                                <i class="fas fa-check-circle text-green-400 text-sm"></i>
-                                <span class="text-green-400 text-sm font-semibold">Session Generated!</span>
-                            </div>
-                            <div class="session-box" id="session-el" onclick="copyText('${code}', document.getElementById('session-el'))">
-                                <div class="flex items-center justify-between mb-2">
-                                    <span class="text-xs text-gray-400 font-medium uppercase tracking-wide">Session ID</span>
-                                    <i class="fas fa-copy text-gray-500 text-xs"></i>
-                                </div>
-                                <div class="session-value">${code}</div>
-                            </div>
-                            <p class="text-gray-500 text-xs text-center">Tap to copy • Also sent to your WhatsApp</p>
-                        </div>`;
+                    if (data.instructions && data.instructions.length) {
+                        const c = document.getElementById('steps-container');
+                        c.innerHTML = '';
+                        data.instructions.forEach((step, i) => {
+                            const text = step.replace(/^\d+\.\s*/, '');
+                            c.innerHTML += `
+                                <div class="step">
+                                    <div class="step-num">${i + 1}</div>
+                                    <div class="text-gray-300 text-xs leading-relaxed">${text}</div>
+                                </div>`;
+                        });
+                    }
+
+                    loading.style.display = 'none';
+                    qrArea.style.display  = 'flex';
                 } else {
-                    output.innerHTML = `
-                        <div class="space-y-3 fade-up">
-                            <div class="flex items-center gap-2 mb-1">
-                                <div class="relative">
-                                    <div class="w-2 h-2 bg-sky-400 rounded-full"></div>
-                                    <div class="w-2 h-2 bg-sky-400 rounded-full absolute inset-0 pulse-ring"></div>
-                                </div>
-                                <span class="text-sky-400 text-sm font-semibold">Pair code ready — enter in WhatsApp</span>
-                            </div>
-                            <div class="code-box" id="code-el" onclick="copyText('${code}', document.getElementById('code-el'))">
-                                <div class="flex items-center justify-between mb-3">
-                                    <span class="text-xs text-gray-400 font-medium uppercase tracking-wide">Pairing Code</span>
-                                    <i class="fas fa-copy text-gray-500 text-xs"></i>
-                                </div>
-                                <div class="text-center">
-                                    <span class="code-value">${code}</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-500 text-xs text-center">Tap to copy • Valid for 60 seconds</p>
-                        </div>`;
+                    throw new Error(data.code || 'No QR data received');
                 }
             } catch (err) {
-                resetBtn();
-                showError('Service unavailable. Please try again.');
+                document.getElementById('error-msg').textContent = err.message || 'Failed to load QR code';
+                loading.style.display   = 'none';
+                errorArea.style.display = 'flex';
             }
-        });
+        }
 
-        // Enter key support
-        numberInput.addEventListener('keydown', e => {
-            if (e.key === 'Enter') submitBtn.click();
-        });
+        loadQRCode();
     </script>
 </body>
 </html>
