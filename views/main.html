@@ -3,13 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALI-MD - Advanced WhatsApp Bot Pairing Platform</title>
-    <link rel="icon" href="https://files.catbox.moe/e5b2az.jpg" type="image/png">
+    <title>ALI-MD - PAIRING PLATFORM</title>
+    <meta name="description" content="ALI-MD is a free multi-device WhatsApp bot. Pair with a code or QR scan in under a minute. No panel or server needed.">
+    <meta name="theme-color" content="#7b1fa2">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="ALI-MD - WhatsApp Bot Pairing Platform">
+    <meta property="og:description" content="Pair your WhatsApp in 60 seconds. No panel, no server, 100+ commands.">
+    <meta property="og:image" content="https://files.catbox.moe/up449y.jpg">
+    <link rel="icon" href="https://files.catbox.moe/up449y.jpg" type="image/png">
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Keep this in the <head> only -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body class="antialiased">
 
@@ -17,18 +25,20 @@
     <header id="header" class="navbar-premium fixed top-0 left-0 right-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#home" class="flex items-center space-x-3 text-xl font-bold text-white">
-                <img src="https://files.catbox.moe/e5b2az.jpg" alt="ALI-MD Logo" class="w-10 h-10 rounded-full border-2 border-pink-500 shadow-lg">
+                <img src="https://files.catbox.moe/up449y.jpg" alt="ALI-MD Logo" class="w-10 h-10 rounded-full border-2 border-pink-500 shadow-lg">
                 <span class="hero-title-gradient">ALI-MD</span>
             </a>
             <div class="hidden md:flex items-center space-x-8">
                 <a href="/pair" class="nav-link-premium text-gray-300 hover:text-white">Quick Pair</a>
+                <a href="/qrpage" class="nav-link-premium text-gray-300 hover:text-white">QR Pair</a>
                 <a href="#commands" class="nav-link-premium text-gray-300 hover:text-white">Commands</a>
                 <a href="#features" class="nav-link-premium text-gray-300 hover:text-white">Features</a>
+                <a href="#faq" class="nav-link-premium text-gray-300 hover:text-white">FAQ</a>
                 <a href="#about" class="nav-link-premium text-gray-300 hover:text-white">About</a>
-                <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" class="nav-link-premium text-gray-300 hover:text-white">Updates</a>
+                <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" rel="noopener noreferrer" class="nav-link-premium text-gray-300 hover:text-white">Updates</a>
                 <a href="#" id="owner-link" class="nav-link-premium text-gray-300 hover:text-white">Contact</a>
             </div>
-            <button id="mobile-menu-button" class="md:hidden text-white hover:text-pink-400 transition">
+            <button id="mobile-menu-button" aria-label="Open menu" class="md:hidden text-white hover:text-pink-400 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="4" y1="12" x2="20" y2="12"></line>
                     <line x1="4" y1="6" x2="20" y2="6"></line>
@@ -42,11 +52,12 @@
     <div id="mobile-menu">
         <div class="pt-20 px-4">
             <a href="/pair" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">Phone Pairing</a>
-            <a href="/qr-scanner" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">QR Pairing</a>
+            <a href="/qrpage" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">QR Pairing</a>
             <a href="#commands" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">Commands</a>
             <a href="#features" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">Features</a>
+            <a href="#faq" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">FAQ</a>
             <a href="#about" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">About</a>
-            <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">Updates</a>
+            <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" rel="noopener noreferrer" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">Updates</a>
             <a href="#" id="owner-link-mobile" class="block py-4 px-6 text-gray-200 hover:text-white transition mobile-nav-link rounded-lg mb-1">Contact</a>
         </div>
     </div>
@@ -58,78 +69,94 @@
         <section id="video-hero" class="relative overflow-hidden py-16">
             <div class="container mx-auto">
                 <div class="video-container">
-                    <video id="heroVideo" class="hero-video" autoplay loop muted playsinline>
-                        <source src="https://www.rabbit.zone.id/hbdl07.webm" type="video/webm">
+                    <video id="heroVideo" class="hero-video" autoplay loop muted playsinline preload="metadata">
+                        <source src="https://files.catbox.moe/1hcmzi.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                 </div>
                 <div class="video-content text-center mt-8 px-4">
-                    <h2 class="text-3xl md:text-4xl font-black text-white mb-4">ALI MD — The Ultimate Multi-Device WhatsApp Bot</h2>
+                    <h2 class="text-3xl md:text-4xl font-black text-white mb-4">ALI-MD The Ultimate Multi-Device WhatsApp Bot</h2>
                     <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-4">Experience the best free WhatsApp bot — no server, no panel required!</p>
                     <p class="text-base md:text-lg text-gray-400 max-w-2xl mx-auto mb-3">Simply pair your device and start your bot instantly.</p>
-                    <div class="mt-6 text-[8px] text-gray-700 opacity-20">
-                        <p class="mb-1">Powered by ALI MD</p>
-                        <p>Created by ALI INXIDE 🍉</p>
-                    </div>
                 </div>
-            </div>
-        </section>
+            </div> <!-- container -->
+        </section> <!-- video-hero END -->
 
-        <!-- Quick Pair CTA Section (Previously Footer) -->
+        <!-- Quick Pair CTA Section -->
         <section id="pair" class="min-h-screen flex items-center px-4 py-20 relative overflow-hidden">
-            <div class="absolute inset-0 grid-background opacity-20"></div>
-            <div class="relative z-10 max-w-6xl mx-auto w-full">
-                <div class="mb-8 fade-in-up">
-                    <span class="inline-block px-5 py-2 bg-pink-500/20 border border-pink-500/30 rounded-full text-pink-300 font-semibold text-xs uppercase tracking-wide">
-                        Instant Pairing Available
-                    </span>
-                </div>
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 fade-in-up">
-                    Pair Your <span class="hero-title-gradient">WhatsApp</span><br/>In 60 Seconds
-                </h1>
-                <p class="text-lg md:text-xl text-gray-300 max-w-2xl mb-10 leading-relaxed fade-in-up" style="transition-delay: 100ms;">
-                    No panel required. No server needed. Just scan the code and start using your powerful WhatsApp bot instantly.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 items-start fade-in-up" style="transition-delay: 200ms;">
-                    <a href="/pair" class="btn-glow text-white font-semibold py-4 px-10 rounded-xl text-base shadow-2xl inline-flex items-center gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M16.6 14c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.7-.8.9-.1.1-.3.2-.5.1-.2-.1-.9-.3-1.8-1.1-.7-.6-1.1-1.4-1.3-1.6-.1-.2 0-.4.1-.5.1-.1.2-.2.4-.4.1-.1.2-.2.2-.4.1-.1.1-.3 0-.4-.1-.1-1.1-2.6-1.5-3.5-.4-.9-.8-1.1-.8-1.1-.1 0-.3-.1-.5-.1h-.5c-.2 0-.5.2-.6.5-.2.3-.7 1.4-.7 3.3s.8 3.8 1 4.1c.1.2 1.5 2.3 3.6 3.2.5.2.9.4 1.2.5.5.2 1 .2 1.3.1.4-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.3-.2-.5-.3zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/>
-                        </svg>
-                        Phone Pairing
-                    </a>
-                    <a href="/qr-scanner" class="px-8 py-4 rounded-xl border-2 border-pink-500/40 text-white font-semibold text-base hover:bg-pink-500/20 transition inline-flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="3" width="8" height="8" rx="1"></rect>
-                            <rect x="13" y="3" width="8" height="8" rx="1"></rect>
-                            <rect x="3" y="13" width="8" height="8" rx="1"></rect>
-                            <rect x="13" y="13" width="8" height="8" rx="1"></rect>
-                        </svg>
-                        QR Pairing
-                    </a>
-                    <a href="#about" class="px-8 py-4 rounded-xl border-2 border-white/20 text-white font-semibold text-base hover:bg-white/10 transition inline-flex items-center gap-2">
-                        Learn More
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
-                    </a>
-                </div>
-                <div class="mt-12 grid grid-cols-3 gap-6 max-w-2xl fade-in-up" style="transition-delay: 300ms;">
-                    <div>
-                        <div class="text-3xl font-black hero-title-gradient mb-1">100+</div>
-                        <div class="text-gray-400 text-xs uppercase tracking-wide">Commands</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl font-black hero-title-gradient mb-1">24/7</div>
-                        <div class="text-gray-400 text-xs uppercase tracking-wide">Active Bot</div>
-                    </div>
-                    <div>
-                        <div class="text-3xl font-black hero-title-gradient mb-1">FREE</div>
-                        <div class="text-gray-400 text-xs uppercase tracking-wide">Forever</div>
-                    </div>
-                </div>
-            </div>
-        </section>
+  <div class="absolute inset-0 grid-background opacity-20"></div>
+  <div class="relative z-10 max-w-6xl mx-auto w-full">
+    <div class="mb-8 fade-in-up">
+      <span class="inline-block px-5 py-2 bg-pink-500/20 border border-pink-500/30 rounded-full text-pink-300 font-semibold text-xs uppercase tracking-wide">
+        Instant Pairing Available
+      </span>
+    </div>
+
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6 fade-in-up">
+      Pair Your <span class="hero-title-gradient">WhatsApp</span><br/>In 60 Seconds
+    </h1>
+
+    <p class="text-lg md:text-xl text-gray-300 max-w-2xl mb-10 leading-relaxed fade-in-up" style="transition-delay: 100ms;">
+      No panel required. No server needed. Just scan the code and start using your powerful WhatsApp bot instantly.
+    </p>
+
+<div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 mb-6">
+
+  <!-- Pair Code Button -->
+  <a href="/pair" class="w-full sm:w-auto px-10 py-4 rounded-xl border-2 border-blue-500/40 text-white font-semibold text-base hover:bg-blue-500/20 transition inline-flex items-center justify-center gap-2 group">
+    <i class="fas fa-link text-white group-hover:text-blue-300 transition"></i>
+    PAIR-CODE
+  </a>
+
+  <!-- QR Code Button -->
+  <a href="/qrpage" class="w-full sm:w-auto px-10 py-4 rounded-xl border-2 border-pink-500/40 text-white font-semibold text-base hover:bg-pink-500/20 transition inline-flex items-center justify-center gap-2 group">
+    <i class="fas fa-qrcode text-white group-hover:text-pink-300 transition"></i>
+    QR SCANNER
+  </a>
+
+  <!-- GitHub Button -->
+  <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-10 py-4 rounded-xl border-2 border-gray-500/40 text-white font-semibold text-base hover:bg-gray-500/20 transition inline-flex items-center justify-center gap-2 group">
+    <i class="fab fa-github text-white group-hover:text-gray-300 transition"></i>
+    GITHUB FORK
+  </a>
+
+  <!-- Heroku Deploy Button -->
+  <a href="https://dashboard.heroku.com/new?template=https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-10 py-4 rounded-xl border-2 border-purple-500/40 text-white font-semibold text-base hover:bg-purple-500/20 transition inline-flex items-center justify-center gap-2 group">
+    <i class="fas fa-cloud-upload-alt text-white group-hover:text-purple-300 transition"></i>
+    HEROKU DEPLOY
+  </a>
+
+  <!-- WhatsApp Channel Button -->
+  <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-10 py-4 rounded-xl border-2 border-green-500/40 text-white font-semibold text-base hover:bg-green-500/20 transition inline-flex items-center justify-center gap-2 group">
+    <i class="fab fa-whatsapp text-white group-hover:text-green-300 transition"></i>
+    WHATSAPP CHANNEL
+  </a>
+
+  <!-- Learn More Button -->
+  <a href="#about" class="w-full sm:w-auto px-8 py-4 rounded-xl border-2 border-white/20 text-white font-semibold text-base hover:bg-white/10 transition inline-flex items-center justify-center gap-2 group">
+    <i class="fas fa-arrow-right text-white group-hover:text-white/60 transition"></i>
+    LEARN-MORE
+  </a>
+
+</div>
+
+        <!-- Stats -->
+    <div class="mt-12 grid grid-cols-3 gap-6 max-w-2xl fade-in-up" style="transition-delay: 350ms;">
+      <div>
+        <div class="text-3xl font-black hero-title-gradient mb-1">100+</div>
+        <div class="text-gray-400 text-xs uppercase tracking-wide">Commands</div>
+      </div>
+      <div>
+        <div class="text-3xl font-black hero-title-gradient mb-1">24/7</div>
+        <div class="text-gray-400 text-xs uppercase tracking-wide">Active Bot</div>
+      </div>
+      <div>
+        <div class="text-3xl font-black hero-title-gradient mb-1">FREE</div>
+        <div class="text-gray-400 text-xs uppercase tracking-wide">Forever</div>
+      </div>
+    </div>
+  </div>
+</section>
 
         <!-- How to Pair Section (Previously Get Started) -->
         <section id="start" class="py-32 px-4 bg-black/20">
@@ -140,17 +167,17 @@
                 </div>
                 <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
                     <div class="relative p-10 rounded-3xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 border border-pink-500/20 fade-in-up">
-
+                        <div class="absolute -top-5 left-8 w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white text-xl font-black shadow-lg">1</div>
                         <h3 class="text-2xl text-white font-bold mb-4 mt-6">Click Pair Button</h3>
                         <p class="text-gray-300 leading-relaxed">Get your unique 8-digit pairing code instantly—completely free</p>
                     </div>
                     <div class="relative p-10 rounded-3xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/20 fade-in-up" style="transition-delay: 150ms;">
-
+                        <div class="absolute -top-5 left-8 w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white text-xl font-black shadow-lg">2</div>
                         <h3 class="text-2xl text-white font-bold mb-4 mt-6">Link Device</h3>
                         <p class="text-gray-300 leading-relaxed">Open WhatsApp → Linked Devices → Enter your code</p>
                     </div>
                     <div class="relative p-10 rounded-3xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 border border-pink-500/20 fade-in-up" style="transition-delay: 300ms;">
-
+                        <div class="absolute -top-5 left-8 w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white text-xl font-black shadow-lg">3</div>
                         <h3 class="text-2xl text-white font-bold mb-4 mt-6">Start Using Bot</h3>
                         <p class="text-gray-300 leading-relaxed">Type .menu and unlock 100+ powerful commands instantly</p>
                     </div>
@@ -238,12 +265,40 @@
             </div>
         </section>
 
+        <!-- FAQ (new) -->
+        <section id="faq" class="py-24 px-4">
+            <div class="container mx-auto">
+                <div class="max-w-3xl mx-auto mb-12 fade-in-up">
+                    <h2 class="text-3xl md:text-4xl font-black text-white mb-4">Frequently Asked Questions</h2>
+                    <p class="text-base text-gray-300">Quick answers before you pair.</p>
+                </div>
+                <div class="max-w-3xl mx-auto space-y-4 fade-in-up">
+                    <details class="rounded-xl border border-white/10 bg-white/5 p-5 group">
+                        <summary class="cursor-pointer text-white font-semibold">Which pairing method should I use?</summary>
+                        <p class="text-gray-300 text-sm leading-relaxed mt-3">Use Pair-Code if you only have one phone. Use QR Scanner if you can scan the code from a second device.</p>
+                    </details>
+                    <details class="rounded-xl border border-white/10 bg-white/5 p-5 group">
+                        <summary class="cursor-pointer text-white font-semibold">The pairing code does not work. What now?</summary>
+                        <p class="text-gray-300 text-sm leading-relaxed mt-3">Codes expire quickly. Generate a new one, enter your number with the country code and no plus sign, and type the code right away in WhatsApp under Linked Devices.</p>
+                    </details>
+                    <details class="rounded-xl border border-white/10 bg-white/5 p-5 group">
+                        <summary class="cursor-pointer text-white font-semibold">How do I see the commands after pairing?</summary>
+                        <p class="text-gray-300 text-sm leading-relaxed mt-3">Send .menu to the bot in any chat to list every available command.</p>
+                    </details>
+                    <details class="rounded-xl border border-white/10 bg-white/5 p-5 group">
+                        <summary class="cursor-pointer text-white font-semibold">Where do I get help or updates?</summary>
+                        <p class="text-gray-300 text-sm leading-relaxed mt-3">Join the WhatsApp Updates channel or use Contact Developer in the footer.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
         <!-- About/Hero Section (Previously at top) -->
-        <section id="about" class="py-32 px-4">
+        <section id="about" class="py-32 px-4 bg-black/20">
             <div class="container mx-auto">
                 <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16">
                     <div class="lg:w-1/2 fade-in-up">
-                        <img src="https://www.rabbit.zone.id/7rxkz4.jpg" alt="ALI-MD Bot" class="bot-hero-image mx-auto lg:mx-0 shadow-2xl" onerror="this.src='https://via.placeholder.com/500x500/7b1fa2/ffffff?text=ALI-MD'">
+                        <img src="https://files.catbox.moe/up449y.jpg" alt="ALI-MD Bot" class="bot-hero-image mx-auto lg:mx-0 shadow-2xl" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27500%27 height=%27500%27%3E%3Crect width=%27100%25%27 height=%27100%25%27 fill=%27%237b1fa2%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 fill=%27white%27 font-size=%2748%27 font-family=%27Arial%27 text-anchor=%27middle%27 dominant-baseline=%27middle%27%3EALI-MD%3C/text%3E%3C/svg%3E';">
                     </div>
                     <div class="lg:w-1/2 fade-in-up" style="transition-delay: 150ms;">
                         <span class="inline-block px-4 py-2 bg-pink-500/20 border border-pink-500/30 rounded-full text-pink-300 font-semibold mb-6 text-sm">ABOUT ALI-MD</span>
@@ -259,7 +314,7 @@
                                 <div class="text-pink-400 font-bold text-lg">No Server Needed</div>
                             </div>
                             <div class="px-6 py-3 rounded-xl bg-purple-500/20 border border-purple-500/30">
-                                <div class="text-purple-400 font-bold text-lg">300+ Commands</div>
+                                <div class="text-purple-400 font-bold text-lg">100+ Commands</div>
                             </div>
                             <div class="px-6 py-3 rounded-xl bg-pink-500/20 border border-pink-500/30">
                                 <div class="text-pink-400 font-bold text-lg">Free Forever</div>
@@ -278,7 +333,7 @@
             <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-12 mb-12">
                 <div>
                     <div class="flex items-center space-x-3 mb-4">
-                        <img src="https://files.catbox.moe/e5b2az.jpg" alt="ALI-MD" class="w-12 h-12 rounded-full border-2 border-pink-500">
+                        <img src="https://files.catbox.moe/up449y.jpg" alt="ALI-MD" class="w-12 h-12 rounded-full border-2 border-pink-500">
                         <span class="text-2xl font-black hero-title-gradient">ALI-MD</span>
                     </div>
                     <p class="text-gray-400">The best free WhatsApp bot. No panel, no server—just pair and run.</p>
@@ -289,18 +344,19 @@
                         <a href="#pair" class="block text-gray-400 hover:text-pink-400 transition">Pair Now</a>
                         <a href="#commands" class="block text-gray-400 hover:text-pink-400 transition">Commands</a>
                         <a href="#features" class="block text-gray-400 hover:text-pink-400 transition">Features</a>
+                        <a href="#faq" class="block text-gray-400 hover:text-pink-400 transition">FAQ</a>
                     </div>
                 </div>
                 <div>
                     <h4 class="text-white font-bold text-lg mb-4">Connect</h4>
                     <div class="space-y-2">
-                        <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" class="block text-gray-400 hover:text-pink-400 transition">Updates Channel</a>
+                        <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" rel="noopener noreferrer" class="block text-gray-400 hover:text-pink-400 transition">Updates Channel</a>
                         <a href="#" id="owner-link-footer" class="block text-gray-400 hover:text-pink-400 transition">Contact Developer</a>
                     </div>
                 </div>
             </div>
             <div class="border-t border-white/10 pt-8 text-center">
-                <p class="text-gray-400 text-sm">漏 2025 ALI INXIDE INC. All rights reserved.</p>
+                <p class="text-gray-400 text-sm">&copy; <span id="year">2025</span> ALI INC. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -309,12 +365,12 @@
     <div id="owner-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-black/90" id="modal-backdrop"></div>
         <div class="modal-advanced w-full max-w-md mx-auto rounded-2xl relative z-10 p-10 text-center">
-            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-4xl transition">&times;</button>
+            <button id="close-modal" aria-label="Close" class="absolute top-4 right-4 text-gray-400 hover:text-white text-4xl transition">&times;</button>
             <img src="https://avatars.githubusercontent.com/u/105071373?v=4" alt="Owner" class="w-28 h-28 rounded-full mx-auto mb-6 border-4 border-pink-500/60 shadow-2xl">
             <h3 class="text-3xl font-bold text-white mb-2">ALI INXIDE</h3>
             <p class="text-pink-400 text-lg font-semibold mb-8">WhatsApp Bot Developer</p>
             <div class="text-left space-y-4">
-                <a href="https://wa.me/923197521693" target="_blank" class="flex items-center p-4 glass-effect rounded-xl hover:bg-white/10 transition">
+                <a href="https://wa.me/923197521693" target="_blank" rel="noopener noreferrer" class="flex items-center p-4 glass-effect rounded-xl hover:bg-white/10 transition">
                     <svg class="w-6 h-6 mr-4 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M16.6 14c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.7-.8.9-.1.1-.3.2-.5.1-.2-.1-.9-.3-1.8-1.1-.7-.6-1.1-1.4-1.3-1.6-.1-.2 0-.4.1-.5.1-.1.2-.2.4-.4.1-.1.2-.2.2-.4.1-.1.1-.3 0-.4-.1-.1-1.1-2.6-1.5-3.5-.4-.9-.8-1.1-.8-1.1-.1 0-.3-.1-.5-.1h-.5c-.2 0-.5.2-.6.5-.2.3-.7 1.4-.7 3.3s.8 3.8 1 4.1c.1.2 1.5 2.3 3.6 3.2.5.2.9.4 1.2.5.5.2 1 .2 1.3.1.4-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.3-.2-.5-.3zM12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/>
                     </svg>
@@ -323,13 +379,13 @@
                         <p class="text-gray-400 text-sm">+923197521693</p>
                     </div>
                 </a>
-                <a href="https://github.com/ALI-INXIDE" target="_blank" class="flex items-center p-4 glass-effect rounded-xl hover:bg-white/10 transition">
+                <a href="https://github.com/ALI-INXIDE" target="_blank" rel="noopener noreferrer" class="flex items-center p-4 glass-effect rounded-xl hover:bg-white/10 transition">
                     <svg class="w-6 h-6 mr-4 text-gray-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.68-.22.68-.48v-1.69c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.36 1.09 2.94.83.09-.65.35-1.09.63-1.34-2.25-.26-4.6-1.12-4.6-4.99 0-1.1.39-2 .94-2.71-.09-.26-.41-1.28.09-2.68 0 0 .84-.27 2.75 1.02.8-.22 1.65-.33 2.5-.33.85 0 1.7.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.5 1.4.18 2.42.09 2.68.55.71.94 1.61.94 2.71 0 3.88-2.35 4.73-4.61 4.98.36.31.68.92.68 1.85v2.72c0 .27.18.58.69.48C19.13 20.17 22 16.42 22 12c0-5.52-4.48-10-10-10z"/>
                     </svg>
                     <div>
                         <p class="text-white font-semibold">Github</p>
-                        <p class="text-gray-400 text-sm">ALI-INXIDE</p>
+                        <p class="text-gray-400 text-sm">ALI</p>
                     </div>
                 </a>
             </div>
@@ -337,5 +393,12 @@
     </div>
 
     <script src="/js/script.js"></script>
+    <script>
+        // Keep footer year current
+        (function () {
+            var y = document.getElementById('year');
+            if (y) y.textContent = new Date().getFullYear();
+        })();
+    </script>
 </body>
 </html>
