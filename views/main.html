@@ -1,875 +1,1526 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALI-MD - PAIRING PLATFORM</title>
-    <meta name="description" content="ALI-MD is a free multi-device WhatsApp bot. Pair with a code or QR scan in under a minute. No panel or server needed.">
-    <meta name="theme-color" content="#0ea5e9">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="ALI-MD - WhatsApp Bot Pairing Platform">
-    <meta property="og:description" content="Pair your WhatsApp in 60 seconds. No panel, no server, 100+ commands.">
-    <meta property="og:image" content="https://files.catbox.moe/up449y.jpg">
-    <link rel="icon" href="https://files.catbox.moe/80ny5d.jpg" type="image/png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALI-MD - WhatsApp Bot Platform</title>
+<meta name="description" content="ALI-MD — The most advanced free multi-device WhatsApp bot. Pair in seconds, no server required.">
+<meta name="theme-color" content="#0ea5e9">
+<link rel="icon" href="https://files.catbox.moe/80ny5d.jpg" type="image/png">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <style>
-        /* ========== BASE ========== */
-        :root {
-            --sky: #0ea5e9;
-            --cobalt: #2563eb;
-            --cyan: #22d3ee;
-            --gold: #fbbf24;
-            --bg-dark: #05030f;
-            --bg-card: rgba(255,255,255,0.035);
-            --border: rgba(255,255,255,0.08);
-        }
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-dark);
-            color: white;
-            overflow-x: hidden;
-            position: relative;
-            min-height: 100vh;
-        }
+<style>
+:root {
+    --sky: #0ea5e9;
+    --cobalt: #2563eb;
+    --cyan: #22d3ee;
+    --gold: #fbbf24;
+    --bg-body: #05030f;
+    --bg-alt: rgba(0,0,0,0.2);
+    --bg-card: rgba(255,255,255,0.03);
+    --border-color: rgba(255,255,255,0.08);
+    --text-primary: #ffffff;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    --navbar-bg: rgba(5,3,15,0.75);
+    --navbar-bg-scrolled: rgba(5,3,15,0.95);
+}
 
-        /* ========== AURORA ========== */
-        body::before {
-            content: '';
-            position: fixed; inset: 0;
-            background:
-                radial-gradient(circle at 10% 20%, rgba(14,165,233,0.18), transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(37,99,235,0.18), transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(34,211,238,0.08), transparent 50%);
-            filter: blur(80px);
-            z-index: 0;
-            pointer-events: none;
-            animation: auroraShift 25s ease infinite;
-        }
-        @keyframes auroraShift {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.15) rotate(5deg); }
-        }
+body.light-mode {
+    --bg-body: #f0f4f8;
+    --bg-alt: rgba(255,255,255,0.5);
+    --bg-card: rgba(255,255,255,0.75);
+    --border-color: rgba(14,165,233,0.2);
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    --navbar-bg: rgba(255,255,255,0.85);
+    --navbar-bg-scrolled: rgba(255,255,255,0.98);
+}
 
-        /* ========== GRID BG ========== */
-        .grid-background {
-            position: absolute; inset: 0;
-            background-image:
-                linear-gradient(rgba(14,165,233,0.06) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(14,165,233,0.06) 1px, transparent 1px);
-            background-size: 55px 55px;
-            mask-image: radial-gradient(ellipse 85% 65% at 50% 45%, black 35%, transparent 100%);
-            -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 45%, black 35%, transparent 100%);
-        }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-body);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+    transition: background 0.5s ease, color 0.3s ease;
+}
 
-        /* ========== NAVBAR ========== */
-        .navbar-premium {
-            background: rgba(5,3,15,0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s ease;
-        }
-        .navbar-premium.scrolled {
-            background: rgba(5,3,15,0.9);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-        .nav-link-premium {
-            position: relative;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            font-size: 0.875rem;
-        }
-        .nav-link-premium::after {
-            content: '';
-            position: absolute;
-            bottom: -6px; left: 0;
-            width: 0; height: 2px;
-            background: linear-gradient(90deg, var(--sky), var(--cobalt));
-            transition: width 0.3s ease;
-        }
-        .nav-link-premium:hover { color: white !important; }
-        .nav-link-premium:hover::after { width: 100%; }
+#loader {
+    position: fixed; inset: 0; background: #05030f;
+    z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.7s, visibility 0.7s;
+}
+#loader.hide { opacity: 0; visibility: hidden; }
+.loader-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem; font-weight: 900;
+    background: linear-gradient(135deg, #0ea5e9, #2563eb, #22d3ee);
+    background-size: 200% 200%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 3s ease infinite;
+    margin-bottom: 30px; letter-spacing: 6px;
+}
+.loader-bar {
+    width: 240px; height: 3px; background: rgba(255,255,255,0.08);
+    border-radius: 100px; overflow: hidden; margin: 0 auto 18px;
+}
+.loader-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #0ea5e9, #2563eb);
+    animation: loaderFill 1.6s cubic-bezier(0.4,0,0.2,1) forwards;
+    box-shadow: 0 0 20px rgba(14,165,233,0.8);
+}
+@keyframes loaderFill { to { width: 100%; } }
+.loader-text { color: #64748b; font-size: 10px; letter-spacing: 4px; text-transform: uppercase; font-weight: 700; }
 
-        /* ========== HERO GRADIENT ========== */
-        .hero-title-gradient {
-            background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 50%, #22d3ee 100%);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradientShift 6s ease infinite;
-        }
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
+#progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+    background: linear-gradient(90deg, #0ea5e9, #2563eb, #22d3ee);
+    z-index: 9998;
+    box-shadow: 0 0 15px rgba(14,165,233,0.7);
+    transition: width 0.1s;
+}
 
-        /* ========== VIDEO HERO ========== */
-        .video-container {
-            width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
-            border-radius: 24px;
-            overflow: hidden;
-            border: 1px solid rgba(14,165,233,0.25);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 80px rgba(14,165,233,0.15);
-            position: relative;
-            background: #0a1628;
-        }
-        .hero-video {
-            width: 100%;
-            height: auto;
-            display: block;
-            object-fit: cover;
-            min-height: 300px;
-        }
+body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+        radial-gradient(circle at 10% 20%, rgba(14,165,233,0.18), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(37,99,235,0.18), transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(34,211,238,0.08), transparent 50%);
+    filter: blur(80px);
+    z-index: 0; pointer-events: none;
+    animation: auroraShift 25s ease infinite;
+    transition: opacity 0.5s;
+}
+body.light-mode::before { opacity: 0.5; }
+@keyframes auroraShift {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.15) rotate(5deg); }
+}
 
-        /* ========== ANIMATIONS ========== */
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(24px);
-            animation: fadeInUp 0.7s cubic-bezier(0.4,0,0.2,1) forwards;
-        }
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
 
-        /* ========== BUTTONS ========== */
-        .btn-glow {
-            background: linear-gradient(135deg, #0ea5e9, #2563eb);
-            background-size: 200% 200%;
-            animation: gradientShift 5s ease infinite;
-            box-shadow: 0 10px 30px rgba(14,165,233,0.35);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
-        }
-        .btn-glow::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-            transition: left 0.7s ease;
-        }
-        .btn-glow:hover::before { left: 100%; }
-        .btn-glow:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 45px rgba(14,165,233,0.55);
-        }
+.grid-background {
+    position: absolute; inset: 0;
+    background-image:
+        linear-gradient(rgba(14,165,233,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14,165,233,0.06) 1px, transparent 1px);
+    background-size: 55px 55px;
+    mask-image: radial-gradient(ellipse 85% 65% at 50% 45%, black 35%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 45%, black 35%, transparent 100%);
+}
 
-        /* ========== CARDS ========== */
-        .command-card, .feature-card-advanced {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
-            position: relative;
-            overflow: hidden;
-        }
-        .command-card::before, .feature-card-advanced::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, #0ea5e9, #2563eb);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .command-card:hover, .feature-card-advanced:hover {
-            transform: translateY(-5px);
-            border-color: rgba(14,165,233,0.4);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 40px rgba(14,165,233,0.15);
-        }
-        .command-card:hover::before, .feature-card-advanced:hover::before { opacity: 1; }
+.navbar-premium {
+    background: var(--navbar-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+.navbar-premium.scrolled {
+    background: var(--navbar-bg-scrolled);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+.nav-link-premium {
+    position: relative;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+.nav-link-premium::after {
+    content: '';
+    position: absolute; bottom: -6px; left: 0;
+    width: 0; height: 2px;
+    background: linear-gradient(90deg, var(--sky), var(--cobalt));
+    transition: width 0.3s ease;
+}
+.nav-link-premium:hover { color: var(--text-primary) !important; }
+.nav-link-premium:hover::after { width: 100%; }
 
-        /* ========== BOT IMAGE ========== */
-        .bot-hero-image {
-            width: 100%;
-            max-width: 480px;
-            border-radius: 24px;
-            border: 2px solid rgba(14,165,233,0.3);
-            box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 80px rgba(14,165,233,0.2);
-            transition: all 0.4s ease;
-        }
-        .bot-hero-image:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 40px 100px rgba(0,0,0,0.7), 0 0 100px rgba(14,165,233,0.3);
-        }
+.hero-title-gradient {
+    background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 50%, #22d3ee 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 6s ease infinite;
+}
 
-        /* ========== SOCIAL GRID ========== */
-        .social-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        .social-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 20px 10px;
-            border-radius: 18px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            color: rgba(255,255,255,0.75);
-            text-decoration: none;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .social-btn i {
-            font-size: 24px;
-            transition: transform 0.35s ease;
-        }
-        .social-btn:hover {
-            transform: translateY(-5px);
-            color: white;
-        }
-        .social-btn:hover i { transform: scale(1.2); }
-        .social-btn.plugins i { color: #0ea5e9; }
-        .social-btn.plugins:hover {
-            border-color: rgba(14,165,233,0.6);
-            background: rgba(14,165,233,0.12);
-            box-shadow: 0 15px 40px rgba(14,165,233,0.3);
-        }
-        .social-btn.github i { color: #ffffff; }
-        .social-btn.github:hover {
-            border-color: rgba(255,255,255,0.5);
-            background: rgba(255,255,255,0.1);
-            box-shadow: 0 15px 40px rgba(255,255,255,0.15);
-        }
-        .social-btn.channel i { color: #22c55e; }
-        .social-btn.channel:hover {
-            border-color: rgba(34,197,94,0.6);
-            background: rgba(34,197,94,0.12);
-            box-shadow: 0 15px 40px rgba(34,197,94,0.25);
-        }
-        .social-btn.vps i { color: #a855f7; }
-        .social-btn.vps:hover {
-            border-color: rgba(168,85,247,0.6);
-            background: rgba(168,85,247,0.12);
-            box-shadow: 0 15px 40px rgba(168,85,247,0.25);
-        }
+.video-container {
+    width: 100%; max-width: 1100px; margin: 0 auto;
+    border-radius: 24px; overflow: hidden;
+    border: 1px solid rgba(14,165,233,0.25);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 80px rgba(14,165,233,0.15);
+    background: #0a1628;
+}
+.hero-video { width: 100%; height: auto; display: block; min-height: 300px; }
 
-        /* ========== MOBILE MENU ========== */
-        #mobile-menu {
-            position: fixed;
-            inset: 0;
-            background: rgba(5,3,15,0.98);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 40;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
-        }
-        #mobile-menu.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .mobile-nav-link {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-        .mobile-nav-link:hover {
-            background: rgba(14,165,233,0.12);
-            border-color: rgba(14,165,233,0.4);
-            transform: translateX(8px);
-            color: white;
-        }
+.fade-in-up {
+    opacity: 0; transform: translateY(24px);
+    animation: fadeInUp 0.7s cubic-bezier(0.4,0,0.2,1) forwards;
+}
+@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* ========== MODAL ========== */
-        .modal-advanced {
-            background: linear-gradient(145deg, rgba(13,10,26,0.98), rgba(21,15,43,0.98));
-            border: 1px solid rgba(14,165,233,0.3);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 60px rgba(14,165,233,0.15);
-        }
-        .glass-effect {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
+/* PREMIUM CARDS */
+.premium-card {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 26px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+    overflow: hidden;
+}
+.premium-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--sky), var(--cobalt), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+.premium-card::after {
+    content: '';
+    position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(14,165,233,0.12), transparent 40%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+.premium-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(14,165,233,0.5);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 60px rgba(14,165,233,0.15);
+}
+.premium-card:hover::before { opacity: 1; }
+.premium-card:hover::after { opacity: 1; }
 
-        /* ========== PREMIUM BADGE ========== */
-        .premium-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 12px;
-            background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(217,119,6,0.15));
-            border: 1px solid rgba(251,191,36,0.4);
-            border-radius: 100px;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            color: #fbbf24;
-            text-transform: uppercase;
-        }
+.card-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    color: white;
+    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    box-shadow: 0 10px 25px rgba(14,165,233,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+    margin-bottom: 16px;
+    position: relative;
+    transition: all 0.4s ease;
+}
+.card-icon::after {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent 50%);
+    opacity: 0.6;
+}
+.premium-card:hover .card-icon {
+    transform: scale(1.08) rotate(-3deg);
+    box-shadow: 0 15px 40px rgba(14,165,233,0.55);
+}
 
-        /* ========== FAQ ========== */
-        details summary::-webkit-details-marker { display: none; }
-        details summary { list-style: none; }
-        details[open] summary { color: var(--sky); }
-        details summary::after {
-            content: '\f067';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            float: right;
-            transition: transform 0.3s ease;
-            color: var(--sky);
-        }
-        details[open] summary::after { content: '\f068'; }
+.card-number {
+    position: absolute;
+    top: 18px; right: 22px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 42px; font-weight: 900;
+    line-height: 1;
+    color: rgba(14,165,233,0.08);
+    transition: color 0.4s ease;
+}
+.premium-card:hover .card-number { color: rgba(14,165,233,0.18); }
 
-        /* ========== RESPONSIVE ========== */
-        @media (max-width: 768px) {
-            .social-grid { grid-template-columns: repeat(2, 1fr); }
-            .bot-hero-image { max-width: 100%; }
-        }
+.card-corner {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 60px; height: 60px;
+    overflow: hidden;
+    pointer-events: none;
+}
+.card-corner::before {
+    content: '';
+    position: absolute;
+    bottom: -30px; right: -30px;
+    width: 60px; height: 60px;
+    background: linear-gradient(135deg, transparent 50%, rgba(14,165,233,0.15) 50%);
+    transform: rotate(-45deg);
+    transition: all 0.5s ease;
+}
+.premium-card:hover .card-corner::before {
+    background: linear-gradient(135deg, transparent 50%, rgba(14,165,233,0.35) 50%);
+}
 
-        /* ========== SCROLLBAR ========== */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #0ea5e9, #2563eb);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, #38bdf8, #3b82f6); }
-    </style>
+.card-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+}
+.card-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+.card-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--sky);
+    margin-top: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: all 0.4s ease;
+}
+.premium-card:hover .card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.status-badge {
+    position: absolute;
+    top: 14px; right: 14px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 2;
+}
+.badge-live { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.5); color: #22c55e; }
+.badge-live::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: #22c55e; border-radius: 50%;
+    box-shadow: 0 0 8px #22c55e;
+    animation: pulseDot 1.5s infinite;
+}
+.badge-new { background: rgba(14,165,233,0.15); border: 1px solid rgba(14,165,233,0.5); color: #38bdf8; }
+.badge-hot { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.5); color: #ef4444; }
+.badge-beta { background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.5); color: #a855f7; }
+@keyframes pulseDot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.3); }
+}
+
+.stat-card {
+    position: relative;
+    text-align: center;
+    padding: 22px 12px;
+    border-radius: 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    transition: all 0.4s ease;
+    overflow: hidden;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(14,165,233,0.4);
+    box-shadow: 0 15px 35px rgba(14,165,233,0.15);
+}
+.stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 50%;
+    width: 40px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--sky), transparent);
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+.stat-card:hover::before { opacity: 1; }
+.stat-number {
+    font-size: 1.3rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #0ea5e9, #2563eb, #22d3ee);
+    background-size: 200% 200%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 6s ease infinite;
+    letter-spacing: -0.02em;
+}
+.stat-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+    margin-top: 6px;
+}
+
+.step-card {
+    position: relative;
+    padding: 32px 26px;
+    border-radius: 24px;
+    background: linear-gradient(145deg, rgba(14,165,233,0.08), rgba(37,99,235,0.04));
+    border: 1px solid rgba(14,165,233,0.18);
+    transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+    overflow: hidden;
+}
+.step-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(14,165,233,0.5);
+    box-shadow: 0 30px 60px rgba(14,165,233,0.2);
+}
+.step-num {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: white;
+    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    box-shadow: 0 12px 30px rgba(14,165,233,0.4);
+    margin-bottom: 18px;
+    position: relative;
+}
+.step-num::after {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.25), transparent);
+}
+.step-card h3 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+.step-card p {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.trust-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.trust-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    transition: all 0.4s ease;
+    backdrop-filter: blur(12px);
+}
+.trust-badge:hover {
+    transform: translateY(-5px);
+    border-color: rgba(14,165,233,0.5);
+    box-shadow: 0 20px 40px rgba(14,165,233,0.15);
+}
+.trust-badge i { font-size: 26px; color: var(--sky); }
+.trust-badge span {
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-secondary); text-align: center;
+}
+
+.social-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+.social-btn {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px; padding: 20px 10px;
+    border-radius: 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.8px; text-transform: uppercase;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    backdrop-filter: blur(12px);
+}
+.social-btn i { font-size: 24px; transition: transform 0.35s ease; }
+.social-btn:hover { transform: translateY(-5px); color: var(--text-primary); }
+.social-btn:hover i { transform: scale(1.2); }
+.social-btn.plugins i { color: #0ea5e9; }
+.social-btn.plugins:hover { border-color: rgba(14,165,233,0.6); background: rgba(14,165,233,0.12); }
+.social-btn.github i { color: var(--text-primary); }
+.social-btn.github:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.1); }
+.social-btn.channel i { color: #22c55e; }
+.social-btn.channel:hover { border-color: rgba(34,197,94,0.6); background: rgba(34,197,94,0.12); }
+.social-btn.vps i { color: #a855f7; }
+.social-btn.vps:hover { border-color: rgba(168,85,247,0.6); background: rgba(168,85,247,0.12); }
+
+.search-box { position: relative; max-width: 520px; margin: 0 auto 28px; }
+.search-box input {
+    width: 100%; padding: 16px 20px 16px 52px;
+    border-radius: 100px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-size: 14px; outline: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(12px);
+}
+.search-box input::placeholder { color: var(--text-muted); }
+.search-box input:focus {
+    border-color: rgba(14,165,233,0.5);
+    box-shadow: 0 0 30px rgba(14,165,233,0.2);
+    background: rgba(14,165,233,0.05);
+}
+.search-box i.search-icon {
+    position: absolute; left: 20px; top: 50%;
+    transform: translateY(-50%);
+    color: #0ea5e9; font-size: 16px;
+}
+.tab-btn {
+    padding: 10px 22px; border-radius: 100px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1px;
+    cursor: pointer; transition: all 0.3s ease;
+    white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text-primary); border-color: rgba(14,165,233,0.4); transform: translateY(-2px); }
+.tab-btn.active {
+    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    color: white; border-color: transparent;
+    box-shadow: 0 8px 25px rgba(14,165,233,0.4);
+}
+
+#scroll-top {
+    position: fixed; bottom: 30px; right: 30px;
+    width: 50px; height: 50px; border-radius: 50%;
+    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    color: white; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 30px rgba(14,165,233,0.5);
+    opacity: 0; visibility: hidden; transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    z-index: 90; font-size: 18px;
+}
+#scroll-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+#scroll-top:hover { transform: translateY(-5px) scale(1.1); }
+
+#float-wa {
+    position: fixed; bottom: 30px; right: 95px;
+    width: 58px; height: 58px; border-radius: 50%;
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    color: white; display: flex; align-items: center; justify-content: center;
+    font-size: 28px; z-index: 90;
+    transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+    animation: floatPulse 2.2s infinite;
+    text-decoration: none;
+}
+#float-wa:hover { transform: translateY(-5px) scale(1.1); }
+@keyframes floatPulse {
+    0%, 100% { box-shadow: 0 10px 30px rgba(37,211,102,0.5), 0 0 0 0 rgba(37,211,102,0.4); }
+    50% { box-shadow: 0 10px 40px rgba(37,211,102,0.9), 0 0 0 14px rgba(37,211,102,0); }
+}
+
+#audio-player {
+    position: fixed; bottom: 30px; left: 30px;
+    z-index: 90;
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px 10px 10px;
+    background: linear-gradient(135deg, rgba(14,165,233,0.15), rgba(37,99,235,0.15));
+    border: 1px solid rgba(14,165,233,0.35);
+    border-radius: 100px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 30px rgba(14,165,233,0.15);
+    transition: all 0.35s ease;
+    cursor: pointer; user-select: none;
+}
+#audio-player:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4), 0 0 40px rgba(14,165,233,0.3);
+}
+#audio-btn {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    border: none; color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; cursor: pointer;
+    transition: all 0.3s ease;
+}
+#audio-btn:hover { transform: scale(1.1); }
+#audio-btn.playing { animation: pulseAudio 1.6s infinite; }
+@keyframes pulseAudio {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(14,165,233,0.6); }
+    50% { box-shadow: 0 0 0 12px rgba(14,165,233,0); }
+}
+.audio-info { display: flex; flex-direction: column; gap: 4px; min-width: 90px; }
+.audio-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--sky); font-weight: 800; }
+.audio-title { font-size: 11px; color: var(--text-secondary); font-weight: 600; white-space: nowrap; }
+.audio-bars { display: flex; gap: 2px; align-items: flex-end; height: 16px; margin-left: 4px; }
+.audio-bars span {
+    width: 3px;
+    background: linear-gradient(180deg, #0ea5e9, #2563eb);
+    border-radius: 2px; height: 30%;
+}
+#audio-player:not(.muted) .audio-bars span { animation: barBeat 1s ease-in-out infinite; }
+.audio-bars span:nth-child(1) { animation-delay: 0s; }
+.audio-bars span:nth-child(2) { animation-delay: 0.15s; }
+.audio-bars span:nth-child(3) { animation-delay: 0.3s; }
+.audio-bars span:nth-child(4) { animation-delay: 0.45s; }
+@keyframes barBeat {
+    0%, 100% { height: 30%; }
+    50% { height: 100%; }
+}
+
+#cookie-banner {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    z-index: 95;
+    background: linear-gradient(145deg, rgba(13,10,26,0.98), rgba(21,15,43,0.98));
+    border-top: 1px solid rgba(14,165,233,0.3);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 -15px 40px rgba(0,0,0,0.5);
+    padding: 18px 24px;
+    transform: translateY(100%);
+    transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+body.light-mode #cookie-banner { background: rgba(255,255,255,0.98); border-top-color: rgba(14,165,233,0.4); }
+#cookie-banner.show { transform: translateY(0); }
+.cookie-content {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px; flex-wrap: wrap;
+}
+.cookie-text { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 260px; }
+.cookie-text i { color: #fbbf24; font-size: 24px; }
+.cookie-text p { font-size: 13px; color: var(--text-secondary); margin: 0; }
+.cookie-text a { color: var(--sky); text-decoration: underline; }
+.cookie-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.cookie-btn {
+    padding: 10px 22px; border-radius: 10px;
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    cursor: pointer; border: none;
+    transition: all 0.3s ease;
+}
+.cookie-accept {
+    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    color: white;
+    box-shadow: 0 8px 20px rgba(14,165,233,0.35);
+}
+.cookie-accept:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(14,165,233,0.5); }
+.cookie-reject { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); }
+.cookie-reject:hover { color: var(--text-primary); border-color: var(--sky); }
+
+.theme-toggle {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.3s ease;
+    font-size: 14px;
+}
+.theme-toggle:hover {
+    border-color: var(--sky);
+    color: var(--sky);
+    background: rgba(14,165,233,0.08);
+    transform: rotate(20deg);
+}
+
+.platform-chip {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 22px; border-radius: 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    transition: all 0.35s ease;
+    font-size: 13px; font-weight: 700;
+    color: var(--text-secondary);
+}
+.platform-chip:hover {
+    transform: translateY(-4px);
+    border-color: rgba(14,165,233,0.4);
+    background: rgba(14,165,233,0.08);
+}
+.platform-chip i { font-size: 22px; }
+.pc-youtube i { color: #ff0000; }
+.pc-tiktok i { color: var(--text-primary); }
+.pc-instagram i { color: #e1306c; }
+.pc-facebook i { color: #1877f2; }
+.pc-spotify i { color: #1db954; }
+.pc-twitter i { color: #1da1f2; }
+
+#mobile-menu {
+    position: fixed; inset: 0;
+    background: rgba(5,3,15,0.98);
+    backdrop-filter: blur(20px);
+    z-index: 40;
+    opacity: 0; visibility: hidden;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    overflow-y: auto;
+}
+body.light-mode #mobile-menu { background: rgba(240,244,248,0.98); }
+#mobile-menu.active { opacity: 1; visibility: visible; }
+.mobile-nav-link {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    text-decoration: none; font-weight: 600;
+    font-size: 0.95rem; transition: all 0.3s ease;
+    color: var(--text-secondary);
+}
+.mobile-nav-link:hover {
+    background: rgba(14,165,233,0.12);
+    border-color: rgba(14,165,233,0.4);
+    transform: translateX(8px);
+    color: var(--text-primary);
+}
+
+.modal-advanced {
+    background: linear-gradient(145deg, rgba(13,10,26,0.98), rgba(21,15,43,0.98));
+    border: 1px solid rgba(14,165,233,0.3);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 60px rgba(14,165,233,0.15);
+}
+body.light-mode .modal-advanced { background: rgba(255,255,255,0.98); }
+.glass-effect {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+}
+
+.premium-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px;
+    background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(217,119,6,0.15));
+    border: 1px solid rgba(251,191,36,0.4);
+    border-radius: 100px;
+    font-size: 10px; font-weight: 800;
+    letter-spacing: 1px; color: #fbbf24;
+    text-transform: uppercase;
+}
+
+details summary::-webkit-details-marker { display: none; }
+details summary { list-style: none; cursor: pointer; }
+details[open] summary { color: var(--sky); }
+details summary::after {
+    content: '\f067';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900; float: right;
+    transition: transform 0.3s ease;
+    color: var(--sky);
+}
+details[open] summary::after { content: '\f068'; }
+
+#toast-container {
+    position: fixed; bottom: 110px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex; flex-direction: column; gap: 10px;
+    align-items: center; pointer-events: none;
+}
+.toast {
+    background: linear-gradient(145deg, rgba(13,10,26,0.98), rgba(21,15,43,0.98));
+    border: 1px solid rgba(14,165,233,0.4);
+    border-radius: 14px;
+    padding: 14px 24px; color: white;
+    font-size: 13px; font-weight: 600;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 30px rgba(14,165,233,0.2);
+    display: flex; align-items: center; gap: 10px;
+    pointer-events: auto;
+    animation: toastIn 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.toast.hide { animation: toastOut 0.4s ease forwards; }
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes toastOut { to { opacity: 0; transform: translateY(20px) scale(0.9); } }
+
+.bot-hero-image {
+    width: 100%; max-width: 480px;
+    border-radius: 24px;
+    border: 2px solid rgba(14,165,233,0.3);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 80px rgba(14,165,233,0.2);
+    transition: all 0.4s ease;
+}
+.bot-hero-image:hover { transform: translateY(-5px) scale(1.02); }
+
+@media (max-width: 768px) {
+    .social-grid { grid-template-columns: repeat(2, 1fr); }
+    .trust-grid { grid-template-columns: repeat(2, 1fr); }
+    .bot-hero-image { max-width: 100%; }
+    #float-wa { bottom: 20px; right: 20px; width: 52px; height: 52px; font-size: 24px; }
+    #scroll-top { bottom: 20px; right: 84px; width: 46px; height: 46px; }
+    #audio-player { bottom: 20px; left: 20px; padding: 8px 12px 8px 8px; }
+    .audio-info { display: none; }
+    #audio-btn { width: 38px; height: 38px; font-size: 14px; }
+    #cookie-banner { padding: 14px 16px; }
+    .cookie-content { flex-direction: column; align-items: flex-start; }
+    .cookie-btns { width: 100%; }
+    .cookie-btn { flex: 1; }
+    .loader-logo { font-size: 2rem; }
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #0ea5e9, #2563eb); border-radius: 4px; }
+</style>
 </head>
 <body class="antialiased">
 
-    <!-- ══════════ NAVBAR ══════════ -->
-    <header id="header" class="navbar-premium fixed top-0 left-0 right-0 z-50">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#home" class="flex items-center space-x-3 text-xl font-bold text-white">
-                <img src="https://files.catbox.moe/up449y.jpg" alt="ALI-MD Logo" class="w-10 h-10 rounded-full border-2 border-sky-500 shadow-lg">
-                <span class="hero-title-gradient" style="font-family:'Orbitron',sans-serif;letter-spacing:1px;">ALI-MD</span>
+<div id="loader">
+    <div style="text-align:center;">
+        <div class="loader-logo">ALI-MD</div>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+        <p class="loader-text">Initializing Premium Experience</p>
+    </div>
+</div>
+
+<div id="progress-bar"></div>
+
+<header id="header" class="navbar-premium fixed top-0 left-0 right-0 z-50">
+    <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="#home" class="flex items-center space-x-3 text-xl font-bold">
+            <img src="https://files.catbox.moe/up449y.jpg" alt="ALI-MD" class="w-10 h-10 rounded-full border-2 border-sky-500 shadow-lg">
+            <span class="hero-title-gradient" style="font-family:'Orbitron',sans-serif;letter-spacing:1px;">ALI-MD</span>
+        </a>
+        <div class="hidden lg:flex items-center space-x-5">
+            <a href="./pair" class="nav-link-premium">Quick Pair</a>
+            <a href="./qr" class="nav-link-premium">QR Pair</a>
+            <a href="./plugins" class="nav-link-premium">Plugins</a>
+            <a href="#commands" class="nav-link-premium">Commands</a>
+            <a href="#features" class="nav-link-premium">Features</a>
+            <a href="#faq" class="nav-link-premium">FAQ</a>
+
+            <button class="theme-toggle" id="theme-toggle" aria-label="Theme">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
+
+            <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener" class="flex items-center gap-2 px-3 py-2 rounded-xl border border-sky-500/30 text-sky-400 hover:bg-sky-500/10 text-sm font-semibold transition">
+                <i class="fab fa-github"></i>
             </a>
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="/pair" class="nav-link-premium text-gray-300">Quick Pair</a>
-                <a href="/qrpage" class="nav-link-premium text-gray-300">QR Pair</a>
-                <a href="plugins.html" class="nav-link-premium text-gray-300">Plugins</a>
-                <a href="#commands" class="nav-link-premium text-gray-300">Commands</a>
-                <a href="#features" class="nav-link-premium text-gray-300">Features</a>
-                <a href="#faq" class="nav-link-premium text-gray-300">FAQ</a>
-                <a href="#about" class="nav-link-premium text-gray-300">About</a>
-                <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener" class="flex items-center gap-2 px-4 py-2 rounded-xl border border-sky-500/30 text-sky-400 hover:bg-sky-500/10 text-sm font-semibold transition">
-                    <i class="fab fa-github"></i> GitHub
-                </a>
-            </div>
-            <button id="mobile-menu-button" aria-label="Open menu" class="md:hidden text-white hover:text-sky-400 transition p-2">
+        </div>
+        <div class="flex items-center gap-2 lg:hidden">
+            <button class="theme-toggle" id="theme-toggle-mobile" aria-label="Theme">
+                <i class="fas fa-moon" id="theme-icon-mobile"></i>
+            </button>
+            <button id="mobile-menu-button" aria-label="Menu" class="p-2" style="color:var(--text-primary);">
                 <i class="fas fa-bars text-2xl"></i>
             </button>
-        </nav>
-    </header>
+        </div>
+    </nav>
+</header>
 
-    <!-- ══════════ MOBILE MENU ══════════ -->
-    <div id="mobile-menu">
-        <div class="pt-24 px-6">
-            <a href="/pair" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">📱 Phone Pairing</a>
-            <a href="/qrpage" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">🔳 QR Pairing</a>
-            <a href="plugins.html" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">🧩 Plugins</a>
-            <a href="#commands" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">⚡ Commands</a>
-            <a href="#features" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">✨ Features</a>
-            <a href="#faq" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">❓ FAQ</a>
-            <a href="#about" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">ℹ️ About</a>
-            <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" rel="noopener" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">📢 Updates</a>
-            <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">🐙 GitHub</a>
-            <a href="https://ali-md-host.vercel.app" target="_blank" rel="noopener" class="block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">🚀 VPS Host</a>
-            <button id="owner-link-mobile" class="w-full text-left block py-4 px-6 text-gray-200 mobile-nav-link rounded-xl mb-2">📞 Contact</button>
+<div id="mobile-menu">
+    <div class="pt-24 px-6 pb-32">
+        <a href="./pair" class="block py-4 px-6 mobile-nav-link rounded-xl mb-2">📱 Quick Pair</a>
+        <a href="./qr" class="block py-4 px-6 mobile-nav-link rounded-xl mb-2">🔳 QR Pair</a>
+        <a href="./plugins" class="block py-4 px-6 mobile-nav-link rounded-xl mb-2">🧩 Plugins</a>
+        <a href="#commands" class="block py-4 px-6 mobile-nav-link rounded-xl mb-2">⚡ Commands</a>
+        <a href="#features" class="block py-4 px-6 mobile-nav-link rounded-xl mb-2">✨ Features</a>
+        <a href="#faq" class="block py-4 px-6 mobile-nav-link rounded-xl mb-2">❓ FAQ</a>
+        <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" class="block py-4 px-6 mobile-nav-link rounded-xl mb-2">📢 Updates</a>
+        <button id="owner-link-mobile" class="w-full text-left block py-4 px-6 mobile-nav-link rounded-xl mb-2">📞 Contact</button>
+    </div>
+</div>
+
+<main class="pt-20 relative z-10">
+
+<section id="video-hero" class="relative overflow-hidden py-16">
+    <div class="container mx-auto px-4">
+        <div class="flex justify-center mb-6">
+            <span class="premium-badge">
+                <i class="fas fa-crown" style="font-size:9px;"></i> PREMIUM
+            </span>
+        </div>
+        <div class="video-container">
+            <video id="heroVideo" class="hero-video" autoplay loop muted playsinline preload="metadata">
+                <source src="https://files.solnets.indevs.in/video/vPL4video.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div class="text-center mt-8 px-4">
+            <h2 class="text-2xl md:text-3xl font-black mb-3" style="color:var(--text-primary);">The Ultimate Multi-Device WhatsApp Bot</h2>
+            <p class="text-base md:text-lg max-w-3xl mx-auto mb-3" style="color:var(--text-secondary);">Experience the most advanced free WhatsApp bot — no server, no panel required.</p>
+            <p class="text-sm md:text-base max-w-2xl mx-auto" style="color:var(--text-muted);">Pair your device in seconds and start automating instantly.</p>
         </div>
     </div>
+</section>
 
-    <!-- ══════════ MAIN ══════════ -->
-    <main class="pt-20 relative z-10">
+<section id="pair" class="min-h-screen flex items-center px-4 py-20 relative overflow-hidden">
+    <div class="absolute inset-0 grid-background opacity-20"></div>
+    <div class="relative z-10 max-w-6xl mx-auto w-full">
+        <div class="mb-8 fade-in-up">
+            <span class="inline-flex items-center gap-2 px-5 py-2 bg-sky-500/20 border border-sky-500/30 rounded-full text-sky-300 font-semibold text-xs uppercase tracking-wide">
+                <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                Instant Pairing Available
+            </span>
+        </div>
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-black leading-tight mb-6 fade-in-up" style="color:var(--text-primary);">
+            Pair Your <span class="hero-title-gradient">WhatsApp</span><br/>
+            In 60 Seconds
+        </h1>
+        <p class="text-base md:text-lg max-w-2xl mb-10 leading-relaxed fade-in-up" style="transition-delay:100ms;color:var(--text-secondary);">
+            No panel required. No server needed. Scan the code and start using your powerful WhatsApp bot instantly.
+        </p>
+        <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 mb-8 fade-in-up" style="transition-delay:200ms;">
+            <a href="./pair" class="w-full sm:w-auto px-10 py-4 rounded-xl border-2 border-sky-500/40 font-semibold text-base hover:bg-sky-500/20 transition inline-flex items-center justify-center gap-2" style="color:var(--text-primary);">
+                <i class="fas fa-link text-sky-400"></i> PAIR-CODE
+            </a>
+            <a href="./qr" class="w-full sm:w-auto px-10 py-4 rounded-xl border-2 border-pink-500/40 font-semibold text-base hover:bg-pink-500/20 transition inline-flex items-center justify-center gap-2" style="color:var(--text-primary);">
+                <i class="fas fa-qrcode text-pink-400"></i> QR SCANNER
+            </a>
+            <a href="#about" class="w-full sm:w-auto px-10 py-4 rounded-xl border-2 border-purple-500/40 font-semibold text-base hover:bg-purple-500/20 transition inline-flex items-center justify-center gap-2" style="color:var(--text-primary);">
+                <i class="fas fa-arrow-right text-purple-400"></i> LEARN MORE
+            </a>
+        </div>
+    </div>
+</section>
 
-        <!-- ═══ VIDEO HERO ═══ -->
-        <section id="video-hero" class="relative overflow-hidden py-16">
-            <div class="container mx-auto px-4">
-                <div class="flex justify-center mb-6">
-                    <span class="premium-badge">
-                        <i class="fas fa-crown text-[9px]"></i> PREMIUM
-                    </span>
-                </div>
-                <div class="video-container">
-                    <video id="heroVideo" class="hero-video" autoplay loop muted playsinline preload="metadata">
-                        <source src="https://files.catbox.moe/k2cljm.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-                <div class="video-content text-center mt-8 px-4">
-                    <!-- FIXED: 30px → 24px -->
-                    <h2 class="text-2xl md:text-3xl font-black text-white mb-3">ALI-MD — The Ultimate Multi-Device WhatsApp Bot</h2>
-                    <!-- FIXED: 18px → 16px -->
-                    <p class="text-base md:text-lg text-gray-300 max-w-3xl mx-auto mb-3">Experience the best free WhatsApp bot — no server, no panel required!</p>
-                    <!-- FIXED: 16px → 14px -->
-                    <p class="text-sm md:text-base text-gray-400 max-w-2xl mx-auto mb-3">Simply pair your device and start your bot instantly.</p>
-                </div>
-        </section>
+<section id="trust" class="py-16 px-4">
+    <div class="container mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-10 fade-in-up">
+            <h2 class="text-2xl md:text-3xl font-black mb-3" style="color:var(--text-primary);">Trusted & Secure</h2>
+            <p class="text-sm" style="color:var(--text-muted);">Your privacy and security are our top priorities</p>
+        </div>
+        <div class="trust-grid fade-in-up">
+            <div class="trust-badge"><i class="fas fa-lock"></i><span>SSL Secured</span></div>
+            <div class="trust-badge"><i class="fas fa-user-shield"></i><span>No Logs</span></div>
+            <div class="trust-badge"><i class="fab fa-github"></i><span>Open Source</span></div>
+            <div class="trust-badge"><i class="fas fa-balance-scale"></i><span>GDPR Safe</span></div>
+        </div>
+    </div>
+</section>
 
-        <!-- ═══ QUICK PAIR CTA ═══ -->
-        <section id="pair" class="min-h-screen flex items-center px-4 py-20 relative overflow-hidden">
-            <div class="absolute inset-0 grid-background opacity-20"></div>
-            <div class="relative z-10 max-w-6xl mx-auto w-full">
-                <div class="mb-8 fade-in-up">
-                    <span class="inline-block px-5 py-2 bg-sky-500/20 border border-sky-500/30 rounded-full text-sky-300 font-semibold text-xs uppercase tracking-wide">
-                        ⚡ Instant Pairing Available
-                    </span>
-                </div>
+<section id="start" class="py-24 px-4" style="background:var(--bg-alt);">
+    <div class="container mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16 fade-in-up">
+            <h2 class="text-3xl md:text-4xl font-black mb-5" style="color:var(--text-primary);">Get Started in 3 Easy Steps</h2>
+            <p class="text-base" style="color:var(--text-secondary);">No technical skills required. Your bot is ready in under a minute.</p>
+        </div>
+        <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
+            <div class="step-card fade-in-up">
+                <div class="step-num">01</div>
+                <h3>Click Pair Button</h3>
+                <p>Get your unique 8-digit pairing code instantly — completely free</p>
+            </div>
+            <div class="step-card fade-in-up" style="transition-delay:150ms;">
+                <div class="step-num">02</div>
+                <h3>Link Device</h3>
+                <p>Open WhatsApp → Linked Devices → Enter your code</p>
+            </div>
+            <div class="step-card fade-in-up" style="transition-delay:300ms;">
+                <div class="step-num">03</div>
+                <h3>Start Using Bot</h3>
+                <p>Type .menu and unlock 100+ powerful commands instantly</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-                <!-- FIXED: 60px → 42px -->
-                <h1 class="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight mb-6 fade-in-up">
-                    Pair Your <span class="hero-title-gradient">WhatsApp</span><br/>In 60 Seconds
-                </h1>
+<section id="connect" class="py-20 px-4">
+    <div class="container mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-12 fade-in-up">
+            <h2 class="text-3xl md:text-4xl font-black mb-3" style="color:var(--text-primary);">Join The Community</h2>
+            <p class="text-base" style="color:var(--text-muted);">Stay updated with latest features, plugins and support</p>
+        </div>
+        <div class="social-grid fade-in-up">
+            <a href="./plugins" class="social-btn plugins"><i class="fas fa-puzzle-piece"></i><span>Plugins</span></a>
+            <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" class="social-btn github"><i class="fab fa-github"></i><span>GitHub</span></a>
+            <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" class="social-btn channel"><i class="fab fa-whatsapp"></i><span>Channel</span></a>
+            <a href="https://ali-md-host.vercel.app" target="_blank" class="social-btn vps"><i class="fas fa-server"></i><span>VPS Host</span></a>
+        </div>
+        <div class="max-w-2xl mx-auto mt-12 grid grid-cols-4 gap-4 fade-in-up" style="transition-delay:250ms;">
+            <div class="stat-card">
+                <div class="stat-number" data-target="99.9" data-suffix="%">0%</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="1.2" data-suffix="K+">0K+</div>
+                <div class="stat-label">Sessions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="5.0" data-suffix="★">0★</div>
+                <div class="stat-label">Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="24" data-suffix="/7">0/7</div>
+                <div class="stat-label">Support</div>
+            </div>
+        </div>
+    </div>
+</section>
 
-                <!-- FIXED: 20px → 18px -->
-                <p class="text-base md:text-lg text-gray-300 max-w-2xl mb-10 leading-relaxed fade-in-up" style="transition-delay: 100ms;">
-                    No panel required. No server needed. Just scan the code and start using your powerful WhatsApp bot instantly.
+<section id="commands" class="py-24 px-4" style="background:var(--bg-alt);">
+    <div class="container mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-10 fade-in-up">
+            <span class="inline-block px-4 py-2 bg-sky-500/20 border border-sky-500/30 rounded-full text-sky-300 font-semibold text-xs uppercase tracking-wide mb-4">300+ Commands</span>
+            <h2 class="text-2xl md:text-3xl font-black mb-3" style="color:var(--text-primary);">Powerful Command Library</h2>
+            <p class="text-sm" style="color:var(--text-secondary);">Search or filter commands by category</p>
+        </div>
+        <div class="search-box fade-in-up">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="commandSearch" placeholder="Search commands...">
+        </div>
+        <div class="flex flex-wrap justify-center gap-3 mb-10 fade-in-up">
+            <button class="tab-btn active" data-filter="all">All</button>
+            <button class="tab-btn" data-filter="ai">AI</button>
+            <button class="tab-btn" data-filter="download">Download</button>
+            <button class="tab-btn" data-filter="group">Group</button>
+            <button class="tab-btn" data-filter="media">Media</button>
+            <button class="tab-btn" data-filter="search">Search</button>
+            <button class="tab-btn" data-filter="fun">Fun</button>
+            <button class="tab-btn" data-filter="tools">Tools</button>
+        </div>
+
+        <div id="commands-grid" class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="premium-card fade-in-up" data-category="ai" data-name="smart assistant ai">
+                <span class="status-badge badge-live">Live</span>
+                <span class="card-number">01</span>
+                <div class="card-icon"><i class="fas fa-robot"></i></div>
+                <h4 class="card-title">Smart Assistant</h4>
+                <p class="card-desc">Intelligent AI responses powered by advanced models</p>
+                <span class="card-arrow">Learn More <i class="fas fa-arrow-right"></i></span>
+                <div class="card-corner"></div>
+            </div>
+            <div class="premium-card fade-in-up" data-category="download" data-name="downloader youtube tiktok instagram" style="transition-delay:100ms;">
+                <span class="status-badge badge-hot">Hot</span>
+                <span class="card-number">02</span>
+                <div class="card-icon" style="background:linear-gradient(135deg,#3b82f6,#1e40af);"><i class="fas fa-download"></i></div>
+                <h4 class="card-title">Downloader</h4>
+                <p class="card-desc">Download from YouTube, TikTok, Instagram and more</p>
+                <span class="card-arrow">Learn More <i class="fas fa-arrow-right"></i></span>
+                <div class="card-corner"></div>
+            </div>
+            <div class="premium-card fade-in-up" data-category="group" data-name="group tools admin" style="transition-delay:200ms;">
+                <span class="card-number">03</span>
+                <div class="card-icon" style="background:linear-gradient(135deg,#0ea5e9,#0284c7);"><i class="fas fa-users-cog"></i></div>
+                <h4 class="card-title">Group Tools</h4>
+                <p class="card-desc">Complete admin controls for group management</p>
+                <span class="card-arrow">Learn More <i class="fas fa-arrow-right"></i></span>
+                <div class="card-corner"></div>
+            </div>
+            <div class="premium-card fade-in-up" data-category="media" data-name="media tools sticker" style="transition-delay:300ms;">
+                <span class="status-badge badge-new">New</span>
+                <span class="card-number">04</span>
+                <div class="card-icon" style="background:linear-gradient(135deg,#38bdf8,#0369a1);"><i class="fas fa-image"></i></div>
+                <h4 class="card-title">Media Tools</h4>
+                <p class="card-desc">Create stunning stickers and apply cool effects</p>
+                <span class="card-arrow">Learn More <i class="fas fa-arrow-right"></i></span>
+                <div class="card-corner"></div>
+            </div>
+            <div class="premium-card fade-in-up" data-category="search" data-name="search web images">
+                <span class="card-number">05</span>
+                <div class="card-icon" style="background:linear-gradient(135deg,#0ea5e9,#1d4ed8);"><i class="fas fa-search"></i></div>
+                <h4 class="card-title">Web Search</h4>
+                <p class="card-desc">Search the web, images and get instant results</p>
+                <span class="card-arrow">Learn More <i class="fas fa-arrow-right"></i></span>
+                <div class="card-corner"></div>
+            </div>
+            <div class="premium-card fade-in-up" data-category="fun" data-name="entertainment games" style="transition-delay:100ms;">
+                <span class="status-badge badge-beta">Beta</span>
+                <span class="card-number">06</span>
+                <div class="card-icon" style="background:linear-gradient(135deg,#3b82f6,#0ea5e9);"><i class="fas fa-gamepad"></i></div>
+                <h4 class="card-title">Entertainment</h4>
+                <p class="card-desc">Games, quizzes and fun interactions for your chats</p>
+                <span class="card-arrow">Learn More <i class="fas fa-arrow-right"></i></span>
+                <div class="card-corner"></div>
+            </div>
+            <div class="premium-card fade-in-up" data-category="tools" data-name="utilities converters" style="transition-delay:200ms;">
+                <span class="card-number">07</span>
+                <div class="card-icon" style="background:linear-gradient(135deg,#0284c7,#0ea5e9);"><i class="fas fa-tools"></i></div>
+                <h4 class="card-title">Utilities</h4>
+                <p class="card-desc">Converters, calculators and everyday helper tools</p>
+                <span class="card-arrow">Learn More <i class="fas fa-arrow-right"></i></span>
+                <div class="card-corner"></div>
+            </div>
+            <div class="premium-card fade-in-up" data-category="tools" data-name="settings customization" style="transition-delay:300ms;">
+                <span class="card-number">08</span>
+                <div class="card-icon" style="background:linear-gradient(135deg,#1d4ed8,#0ea5e9);"><i class="fas fa-cog"></i></div>
+                <h4 class="card-title">Settings</h4>
+                <p class="card-desc">Customize your bot experience exactly how you want</p>
+                <span class="card-arrow">Learn More <i class="fas fa-arrow-right"></i></span>
+                <div class="card-corner"></div>
+            </div>
+        </div>
+        <div id="noResults" class="hidden text-center py-16">
+            <i class="fas fa-search-minus text-5xl mb-4" style="color:var(--text-muted);"></i>
+            <p class="text-sm" style="color:var(--text-muted);">No commands found. Try a different keyword.</p>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="py-24 px-4">
+    <div class="container mx-auto">
+        <div class="max-w-3xl mb-16 fade-in-up">
+            <span class="inline-block px-4 py-2 bg-blue-500/20 border border-blue-500/30 rounded-full text-blue-300 font-semibold text-xs uppercase tracking-wide mb-4">Why ALI-MD</span>
+            <h2 class="text-2xl md:text-3xl font-black mb-3" style="color:var(--text-primary);">Why Choose ALI-MD</h2>
+            <p class="text-sm" style="color:var(--text-secondary);">Professional features, completely free. No hidden costs, no server required.</p>
+        </div>
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="premium-card fade-in-up">
+                <span class="status-badge badge-live">Live</span>
+                <div class="card-icon"><i class="fas fa-bolt"></i></div>
+                <h3 class="card-title">Lightning Fast</h3>
+                <p class="card-desc">Optimized for speed with near-instant response times on every command</p>
+                <div class="card-corner"></div>
+            </div>
+            <div class="premium-card fade-in-up" style="transition-delay:100ms;">
+                <div class="card-icon" style="background:linear-gradient(135deg,#2563eb,#1e40af);"><i class="fas fa-shield-alt"></i></div>
+                <h3 class="card-title">Secure by Design</h3>
+                <p class="card-desc">End-to-end encrypted sessions with enterprise-grade security protocols</p>
+                <div class="card-corner"></div>
+            </div>
+            <div class="premium-card fade-in-up" style="transition-delay:200ms;">
+                <span class="status-badge badge-new">New</span>
+                <div class="card-icon" style="background:linear-gradient(135deg,#38bdf8,#0ea5e9);"><i class="fas fa-clock"></i></div>
+                <h3 class="card-title">24/7 Uptime</h3>
+                <p class="card-desc">Cloud-hosted with automatic failover for uninterrupted service</p>
+                <div class="card-corner"></div>
+            </div>
+            <div class="premium-card fade-in-up">
+                <div class="card-icon" style="background:linear-gradient(135deg,#1d4ed8,#2563eb);"><i class="fas fa-magic"></i></div>
+                <h3 class="card-title">No Setup Required</h3>
+                <p class="card-desc">No panel, no server, no installation — just pair and start immediately</p>
+                <div class="card-corner"></div>
+            </div>
+            <div class="premium-card fade-in-up" style="transition-delay:100ms;">
+                <span class="status-badge badge-hot">Hot</span>
+                <div class="card-icon" style="background:linear-gradient(135deg,#0ea5e9,#0284c7);"><i class="fas fa-sync-alt"></i></div>
+                <h3 class="card-title">Regular Updates</h3>
+                <p class="card-desc">Constantly evolving with new features and improvements</p>
+                <div class="card-corner"></div>
+            </div>
+            <div class="premium-card fade-in-up" style="transition-delay:200ms;">
+                <div class="card-icon" style="background:linear-gradient(135deg,#3b82f6,#0ea5e9);"><i class="fas fa-crown"></i></div>
+                <h3 class="card-title">Premium Quality</h3>
+                <p class="card-desc">Professional-grade bot with powerful automation included</p>
+                <div class="card-corner"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="platforms" class="py-20 px-4" style="background:var(--bg-alt);">
+    <div class="container mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-12 fade-in-up">
+            <span class="inline-block px-4 py-2 bg-sky-500/20 border border-sky-500/30 rounded-full text-sky-300 font-semibold text-xs uppercase tracking-wide mb-4">Supported Platforms</span>
+            <h2 class="text-2xl md:text-3xl font-black mb-3" style="color:var(--text-primary);">Download From Anywhere</h2>
+            <p class="text-sm" style="color:var(--text-muted);">One bot — every platform. Downloads, media and more.</p>
+        </div>
+        <div class="max-w-4xl mx-auto flex flex-wrap justify-center gap-4 fade-in-up">
+            <div class="platform-chip pc-youtube"><i class="fab fa-youtube"></i> YouTube</div>
+            <div class="platform-chip pc-tiktok"><i class="fab fa-tiktok"></i> TikTok</div>
+            <div class="platform-chip pc-instagram"><i class="fab fa-instagram"></i> Instagram</div>
+            <div class="platform-chip pc-facebook"><i class="fab fa-facebook"></i> Facebook</div>
+            <div class="platform-chip pc-spotify"><i class="fab fa-spotify"></i> Spotify</div>
+            <div class="platform-chip pc-twitter"><i class="fab fa-twitter"></i> Twitter/X</div>
+            <div class="platform-chip" style="color:#ff4500;"><i class="fab fa-reddit"></i> Reddit</div>
+            <div class="platform-chip" style="color:#25d366;"><i class="fab fa-whatsapp"></i> WhatsApp</div>
+        </div>
+    </div>
+</section>
+
+<section id="faq" class="py-24 px-4">
+    <div class="container mx-auto">
+        <div class="max-w-3xl mx-auto mb-12 fade-in-up text-center">
+            <h2 class="text-2xl md:text-3xl font-black mb-3" style="color:var(--text-primary);">Frequently Asked Questions</h2>
+            <p class="text-sm" style="color:var(--text-muted);">Quick answers before you pair.</p>
+        </div>
+        <div class="max-w-3xl mx-auto space-y-4 fade-in-up">
+            <details class="rounded-xl p-5" style="background:var(--bg-card);border:1px solid var(--border-color);">
+                <summary class="font-semibold text-sm" style="color:var(--text-primary);">Which pairing method should I use?</summary>
+                <p class="text-sm leading-relaxed mt-3" style="color:var(--text-secondary);">Use Pair-Code if you only have one phone. Use QR Scanner if you can scan the code from a second device.</p>
+            </details>
+            <details class="rounded-xl p-5" style="background:var(--bg-card);border:1px solid var(--border-color);">
+                <summary class="font-semibold text-sm" style="color:var(--text-primary);">The pairing code does not work. What now?</summary>
+                <p class="text-sm leading-relaxed mt-3" style="color:var(--text-secondary);">Codes expire quickly. Generate a new one and enter it right away in WhatsApp under Linked Devices.</p>
+            </details>
+            <details class="rounded-xl p-5" style="background:var(--bg-card);border:1px solid var(--border-color);">
+                <summary class="font-semibold text-sm" style="color:var(--text-primary);">How do I see the commands after pairing?</summary>
+                <p class="text-sm leading-relaxed mt-3" style="color:var(--text-secondary);">Send .menu to the bot in any chat to list every available command.</p>
+            </details>
+            <details class="rounded-xl p-5" style="background:var(--bg-card);border:1px solid var(--border-color);">
+                <summary class="font-semibold text-sm" style="color:var(--text-primary);">Where do I get help or updates?</summary>
+                <p class="text-sm leading-relaxed mt-3" style="color:var(--text-secondary);">Join the WhatsApp Updates channel or use Contact Developer in the footer.</p>
+            </details>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="py-24 px-4" style="background:var(--bg-alt);">
+    <div class="container mx-auto">
+        <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+            <div class="lg:w-1/2 fade-in-up">
+                <img src="https://files.catbox.moe/80ny5d.jpg" alt="ALI-MD Bot" class="bot-hero-image mx-auto lg:mx-0">
+            </div>
+            <div class="lg:w-1/2 fade-in-up" style="transition-delay:150ms;">
+                <span class="inline-block px-4 py-2 bg-sky-500/20 border border-sky-500/30 rounded-full text-sky-300 font-semibold mb-6 text-sm">ABOUT ALI-MD</span>
+                <h2 class="text-3xl md:text-4xl font-black mb-5" style="color:var(--text-primary);">The Ultimate WhatsApp Bot Platform</h2>
+                <p class="text-base leading-relaxed mb-5" style="color:var(--text-secondary);">
+                    ALI-MD is a powerful WhatsApp bot that brings advanced automation, smart features, and comprehensive media processing directly to your WhatsApp — completely free.
                 </p>
-
-                <!-- PAIR BUTTONS -->
-                <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 mb-8 fade-in-up" style="transition-delay: 200ms;">
-                    <a href="/pair" class="w-full sm:w-auto px-10 py-4 rounded-xl border-2 border-sky-500/40 text-white font-semibold text-base hover:bg-sky-500/20 transition inline-flex items-center justify-center gap-2 group">
-                        <i class="fas fa-link text-sky-400 group-hover:text-sky-300 transition"></i>
-                        PAIR-CODE
-                    </a>
-                    <a href="/qrpage" class="w-full sm:w-auto px-10 py-4 rounded-xl border-2 border-pink-500/40 text-white font-semibold text-base hover:bg-pink-500/20 transition inline-flex items-center justify-center gap-2 group">
-                        <i class="fas fa-qrcode text-pink-400 group-hover:text-pink-300 transition"></i>
-                        QR SCANNER
-                    </a>
-                    <a href="#about" class="w-full sm:w-auto px-10 py-4 rounded-xl border-2 border-purple-500/40 text-white font-semibold text-base hover:bg-purple-500/20 transition inline-flex items-center justify-center gap-2 group">
-                       <i class="fas fa-arrow-right text-purple-400 group-hover:text-purple-300 transition"></i>
-                       LEARN-MORE
-                    </a>
-                </div>
-
-        <!-- ═══ CONNECT WITH US ═══ -->
-        <section id="connect" class="py-20 px-4">
-            <div class="container mx-auto">
-                <div class="text-center max-w-3xl mx-auto mb-12 fade-in-up">
-                    <div class="flex items-center justify-center gap-4 mb-4">
-                        <span class="hidden md:block flex-1 h-px bg-gradient-to-r from-transparent via-sky-500/30 to-transparent"></span>
-                        <span class="px-5 py-2 bg-gradient-to-br from-sky-500/10 to-blue-500/10 border border-sky-500/30 rounded-full text-sky-300 font-semibold text-xs uppercase tracking-wider">
-                            <i class="fas fa-compass mr-1"></i> Connect With Us
-                        </span>
-                        <span class="hidden md:block flex-1 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent"></span>
+                <p class="text-sm leading-relaxed mb-8" style="color:var(--text-muted);">
+                    With over 300 commands, instant pairing, and professional-grade security, ALI-MD transforms how you use WhatsApp.
+                </p>
+                <div class="flex flex-wrap gap-3">
+                    <div class="px-5 py-3 rounded-xl bg-sky-500/20 border border-sky-500/30">
+                        <div class="text-sky-400 font-bold text-sm">No Server Needed</div>
                     </div>
-                    <h2 class="text-3xl md:text-4xl font-black text-white mb-3">Join The Community</h2>
-                    <p class="text-base text-gray-400">Stay updated with latest features, plugins and support</p>
-                </div>
-
-                <div class="social-grid fade-in-up" style="transition-delay: 150ms;">
-                    <a href="plugins.html" class="social-btn plugins">
-                        <i class="fas fa-puzzle-piece"></i>
-                        <span>Plugins</span>
-                    </a>
-                    <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener" class="social-btn github">
-                        <i class="fab fa-github"></i>
-                        <span>GitHub</span>
-                    </a>
-                    <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" rel="noopener" class="social-btn channel">
-                        <i class="fab fa-whatsapp"></i>
-                        <span>Channel</span>
-                    </a>
-                    <a href="https://ali-md-host.vercel.app" target="_blank" rel="noopener" class="social-btn vps">
-                        <i class="fas fa-server"></i>
-                        <span>VPS Host</span>
-                    </a>
-                </div>
-
-                <!-- Trust Row - FIXED: 20px → 18px -->
-                <div class="max-w-2xl mx-auto mt-12 grid grid-cols-4 gap-4 fade-in-up" style="transition-delay: 250ms;">
-                    <div class="text-center p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div class="text-lg font-black hero-title-gradient">99.9%</div>
-                        <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1 font-bold">Uptime</div>
+                    <div class="px-5 py-3 rounded-xl bg-blue-500/20 border border-blue-500/30">
+                        <div class="text-blue-400 font-bold text-sm">300+ Commands</div>
                     </div>
-                    <div class="text-center p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div class="text-lg font-black hero-title-gradient">1.2K+</div>
-                        <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1 font-bold">Sessions</div>
-                    </div>
-                    <div class="text-center p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div class="text-lg font-black hero-title-gradient">5.0★</div>
-                        <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1 font-bold">Rating</div>
-                    </div>
-                    <div class="text-center p-4 rounded-xl bg-white/[0.02] border border-white/5">
-                        <div class="text-lg font-black hero-title-gradient">24/7</div>
-                        <div class="text-[10px] text-gray-500 uppercase tracking-wider mt-1 font-bold">Support</div>
-                    </div>
-        </section>
-
-        <!-- ═══ HOW TO PAIR ═══ -->
-        <section id="start" class="py-24 px-4 bg-black/20">
-            <div class="container mx-auto">
-                <div class="text-center max-w-3xl mx-auto mb-16 fade-in-up">
-                    <!-- FIXED: 60px → 36px -->
-                    <h2 class="text-3xl md:text-4xl font-black text-white mb-5">Get Started in 3 Easy Steps</h2>
-                    <p class="text-base text-gray-300">No technical skills required. Your bot is ready in under a minute.</p>
-                </div>
-                <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
-                    <div class="relative p-8 rounded-3xl bg-gradient-to-br from-sky-500/10 to-blue-500/10 border border-sky-500/20 fade-in-up">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-white font-black text-xl mb-5">1</div>
-                        <!-- FIXED: 20px → 18px -->
-                        <h3 class="text-lg text-white font-bold mb-3">Click Pair Button</h3>
-                        <p class="text-gray-300 text-sm leading-relaxed">Get your unique 8-digit pairing code instantly — completely free</p>
-                    </div>
-                    <div class="relative p-8 rounded-3xl bg-gradient-to-br from-blue-500/10 to-sky-500/10 border border-blue-500/20 fade-in-up" style="transition-delay: 150ms;">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-sky-500 flex items-center justify-center text-white font-black text-xl mb-5">2</div>
-                        <h3 class="text-lg text-white font-bold mb-3">Link Device</h3>
-                        <p class="text-gray-300 text-sm leading-relaxed">Open WhatsApp → Linked Devices → Enter your code</p>
-                    </div>
-                    <div class="relative p-8 rounded-3xl bg-gradient-to-br from-sky-500/10 to-blue-500/10 border border-sky-500/20 fade-in-up" style="transition-delay: 300ms;">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-white font-black text-xl mb-5">3</div>
-                        <h3 class="text-lg text-white font-bold mb-3">Start Using Bot</h3>
-                        <p class="text-gray-300 text-sm leading-relaxed">Type .menu and unlock 100+ powerful commands instantly</p>
+                    <div class="px-5 py-3 rounded-xl bg-sky-500/20 border border-sky-500/30">
+                        <div class="text-sky-400 font-bold text-sm">Free Forever</div>
                     </div>
                 </div>
-        </section>
-
-        <!-- ═══ COMMANDS ═══ -->
-        <section id="commands" class="py-24 px-4">
-            <div class="container mx-auto">
-                <div class="max-w-3xl mb-16 fade-in-up">
-                    <span class="inline-block px-4 py-2 bg-sky-500/20 border border-sky-500/30 rounded-full text-sky-300 font-semibold text-xs uppercase tracking-wide mb-4">100+ Commands</span>
-                    <!-- FIXED: 36px → 30px -->
-                    <h2 class="text-2xl md:text-3xl font-black text-white mb-3">Powerful Command Library</h2>
-                    <p class="text-sm text-gray-300">Over 300+ commands at your fingertips—all completely free to use</p>
-                </div>
-                <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="command-card p-6 rounded-xl fade-in-up group">
-                        <i class="fas fa-robot text-sky-400 text-lg mb-3 group-hover:scale-110 transition"></i>
-                        <h4 class="font-bold text-sky-400 text-base mb-1">Smart Assistant</h4>
-                        <p class="text-xs text-gray-400">Intelligent Responses</p>
-                    </div>
-                    <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 100ms;">
-                        <i class="fas fa-download text-blue-400 text-lg mb-3 group-hover:scale-110 transition"></i>
-                        <h4 class="font-bold text-blue-400 text-base mb-1">Downloader</h4>
-                        <p class="text-xs text-gray-400">YouTube, TikTok, IG</p>
-                    </div>
-                    <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 200ms;">
-                        <i class="fas fa-users-cog text-sky-400 text-lg mb-3 group-hover:scale-110 transition"></i>
-                        <h4 class="font-bold text-sky-400 text-base mb-1">Group Tools</h4>
-                        <p class="text-xs text-gray-400">Admin Controls</p>
-                    </div>
-                    <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 300ms;">
-                        <i class="fas fa-image text-blue-400 text-lg mb-3 group-hover:scale-110 transition"></i>
-                        <h4 class="font-bold text-blue-400 text-base mb-1">Media Tools</h4>
-                        <p class="text-xs text-gray-400">Stickers & Effects</p>
-                    </div>
-                    <div class="command-card p-6 rounded-xl fade-in-up group">
-                        <i class="fas fa-search text-sky-400 text-lg mb-3 group-hover:scale-110 transition"></i>
-                        <h4 class="font-bold text-sky-400 text-base mb-1">Search</h4>
-                        <p class="text-xs text-gray-400">Web & Images</p>
-                    </div>
-                    <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 100ms;">
-                        <i class="fas fa-gamepad text-blue-400 text-lg mb-3 group-hover:scale-110 transition"></i>
-                        <h4 class="font-bold text-blue-400 text-base mb-1">Entertainment</h4>
-                        <p class="text-xs text-gray-400">Games & Fun</p>
-                    </div>
-                    <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 200ms;">
-                        <i class="fas fa-tools text-sky-400 text-lg mb-3 group-hover:scale-110 transition"></i>
-                        <h4 class="font-bold text-sky-400 text-base mb-1">Utilities</h4>
-                        <p class="text-xs text-gray-400">Converters & Tools</p>
-                    </div>
-                    <div class="command-card p-6 rounded-xl fade-in-up group" style="transition-delay: 300ms;">
-                        <i class="fas fa-cog text-blue-400 text-lg mb-3 group-hover:scale-110 transition"></i>
-                        <h4 class="font-bold text-blue-400 text-base mb-1">Settings</h4>
-                        <p class="text-xs text-gray-400">Customization</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ═══ FEATURES ═══ -->
-        <section id="features" class="py-24 px-4 bg-black/20">
-            <div class="container mx-auto">
-                <div class="max-w-3xl mb-16 fade-in-up">
-                    <span class="inline-block px-4 py-2 bg-blue-500/20 border border-blue-500/30 rounded-full text-blue-300 font-semibold text-xs uppercase tracking-wide mb-4">Why ALI-MD</span>
-                    <!-- FIXED: 36px → 30px -->
-                    <h2 class="text-2xl md:text-3xl font-black text-white mb-3">Why Choose ALI-MD</h2>
-                    <p class="text-sm text-gray-300">Professional features, completely free. No hidden costs, no server required.</p>
-                </div>
-                <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="feature-card-advanced rounded-2xl p-8 fade-in-up">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-blue-500 flex items-center justify-center mb-4">
-                            <i class="fas fa-bolt text-white"></i>
-                        </div>
-                        <!-- FIXED: 18px → 17px -->
-                        <h3 class="text-base font-bold text-white mb-2">Lightning Fast</h3>
-                        <p class="text-gray-300 text-sm leading-relaxed">Optimized for speed with near-instant response times on every command</p>
-                    </div>
-                    <div class="feature-card-advanced rounded-2xl p-8 fade-in-up" style="transition-delay: 100ms;">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-sky-500 flex items-center justify-center mb-4">
-                            <i class="fas fa-shield-alt text-white"></i>
-                        </div>
-                        <h3 class="text-base font-bold text-white mb-2">Secure by Design</h3>
-                        <p class="text-gray-300 text-sm leading-relaxed">End-to-end encrypted sessions with enterprise-grade security protocols</p>
-                    </div>
-                    <div class="feature-card-advanced rounded-2xl p-8 fade-in-up" style="transition-delay: 200ms;">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-blue-500 flex items-center justify-center mb-4">
-                            <i class="fas fa-clock text-white"></i>
-                        </div>
-                        <h3 class="text-base font-bold text-white mb-2">24/7 Uptime</h3>
-                        <p class="text-gray-300 text-sm leading-relaxed">Cloud-hosted with automatic failover for uninterrupted service</p>
-                    </div>
-                    <div class="feature-card-advanced rounded-2xl p-8 fade-in-up">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-sky-500 flex items-center justify-center mb-4">
-                            <i class="fas fa-magic text-white"></i>
-                        </div>
-                        <h3 class="text-base font-bold text-white mb-2">No Setup Required</h3>
-                        <p class="text-gray-300 text-sm leading-relaxed">No panel, no server, no installation—just pair and start using immediately</p>
-                    </div>
-                    <div class="feature-card-advanced rounded-2xl p-8 fade-in-up" style="transition-delay: 100ms;">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-blue-500 flex items-center justify-center mb-4">
-                            <i class="fas fa-sync-alt text-white"></i>
-                        </div>
-                        <h3 class="text-base font-bold text-white mb-2">Regular Updates</h3>
-                        <p class="text-gray-300 text-sm leading-relaxed">Constantly evolving with new features and improvements</p>
-                    </div>
-                    <div class="feature-card-advanced rounded-2xl p-8 fade-in-up" style="transition-delay: 200ms;">
-                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-sky-500 flex items-center justify-center mb-4">
-                            <i class="fas fa-crown text-white"></i>
-                        </div>
-                        <h3 class="text-base font-bold text-white mb-2">Premium Quality</h3>
-                        <p class="text-gray-300 text-sm leading-relaxed">Professional-grade bot with powerful automation and advanced features included</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ═══ FAQ ═══ -->
-        <section id="faq" class="py-24 px-4">
-            <div class="container mx-auto">
-                <div class="max-w-3xl mx-auto mb-12 fade-in-up text-center">
-                    <!-- FIXED: 36px → 30px -->
-                    <h2 class="text-2xl md:text-3xl font-black text-white mb-3">Frequently Asked Questions</h2>
-                    <p class="text-sm text-gray-300">Quick answers before you pair.</p>
-                </div>
-                <div class="max-w-3xl mx-auto space-y-4 fade-in-up">
-                    <details class="rounded-xl border border-white/10 bg-white/5 p-5 group">
-                        <summary class="cursor-pointer text-white font-semibold flex items-center justify-between text-sm">
-                            Which pairing method should I use?
-                        </summary>
-                        <p class="text-gray-300 text-sm leading-relaxed mt-3">Use Pair-Code if you only have one phone. Use QR Scanner if you can scan the code from a second device.</p>
-                    </details>
-                    <details class="rounded-xl border border-white/10 bg-white/5 p-5 group">
-                        <summary class="cursor-pointer text-white font-semibold flex items-center justify-between text-sm">
-                            The pairing code does not work. What now?
-                        </summary>
-                        <p class="text-gray-300 text-sm leading-relaxed mt-3">Codes expire quickly. Generate a new one, enter your number with the country code and no plus sign, and type the code right away in WhatsApp under Linked Devices.</p>
-                    </details>
-                    <details class="rounded-xl border border-white/10 bg-white/5 p-5 group">
-                        <summary class="cursor-pointer text-white font-semibold flex items-center justify-between text-sm">
-                            How do I see the commands after pairing?
-                        </summary>
-                        <p class="text-gray-300 text-sm leading-relaxed mt-3">Send .menu to the bot in any chat to list every available command.</p>
-                    </details>
-                    <details class="rounded-xl border border-white/10 bg-white/5 p-5 group">
-                        <summary class="cursor-pointer text-white font-semibold flex items-center justify-between text-sm">
-                            Where do I get help or updates?
-                        </summary>
-                        <p class="text-gray-300 text-sm leading-relaxed mt-3">Join the WhatsApp Updates channel or use Contact Developer in the footer.</p>
-                    </details>
-                </div>
-            </div>
-        </section>
-
-        <!-- ═══ ABOUT ═══ -->
-        <section id="about" class="py-24 px-4 bg-black/20">
-            <div class="container mx-auto">
-                <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-16">
-                    <div class="lg:w-1/2 fade-in-up">
-                        <img src="https://files.catbox.moe/80ny5d.jpg" alt="ALI-MD Bot" class="bot-hero-image mx-auto lg:mx-0 shadow-2xl">
-                    </div>
-                    <div class="lg:w-1/2 fade-in-up" style="transition-delay: 150ms;">
-                        <span class="inline-block px-4 py-2 bg-sky-500/20 border border-sky-500/30 rounded-full text-sky-300 font-semibold mb-6 text-sm">ABOUT ALI-MD</span>
-                        <!-- FIXED: 48px → 36px -->
-                        <h2 class="text-3xl md:text-4xl font-black text-white mb-5">The Ultimate WhatsApp Bot Platform</h2>
-                        <!-- FIXED: 18px → 16px -->
-                        <p class="text-base text-gray-300 leading-relaxed mb-5">
-                            ALI-MD is a powerful WhatsApp bot that brings advanced automation, smart features, and comprehensive media processing directly to your WhatsApp—completely free, with no panel or server required.
-                        </p>
-                        <!-- FIXED: 16px → 15px -->
-                        <p class="text-sm text-gray-400 leading-relaxed mb-8">
-                            With over 300 commands, instant pairing, and professional-grade security, ALI-MD transforms how you use WhatsApp. Simply pair the bot and start exploring powerful features—from downloading media to managing groups, all at your fingertips.
-                        </p>
-                        <div class="flex flex-wrap gap-3">
-                            <div class="px-5 py-3 rounded-xl bg-sky-500/20 border border-sky-500/30">
-                                <div class="text-sky-400 font-bold text-sm">No Server Needed</div>
-                            </div>
-                            <div class="px-5 py-3 rounded-xl bg-blue-500/20 border border-blue-500/30">
-                                <div class="text-blue-400 font-bold text-sm">300+ Commands</div>
-                            </div>
-                            <div class="px-5 py-3 rounded-xl bg-sky-500/20 border border-sky-500/30">
-                                <div class="text-sky-400 font-bold text-sm">Free Forever</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- ══════════ FOOTER ══════════ -->
-    <footer class="py-16 px-4 border-t border-white/10 relative z-10">
-        <div class="container mx-auto">
-            <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-12 mb-12">
-                <div>
-                    <div class="flex items-center space-x-3 mb-4">
-                        <img src="https://files.catbox.moe/up449y.jpg" alt="ALI-MD" class="w-12 h-12 rounded-full border-2 border-sky-500">
-                        <span class="text-2xl font-black hero-title-gradient" style="font-family:'Orbitron',sans-serif;">ALI-MD</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">The best free WhatsApp bot. No panel, no server—just pair and run.</p>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold text-base mb-4">Quick Links</h4>
-                    <div class="space-y-2">
-                        <a href="/pair" class="block text-gray-400 hover:text-sky-400 transition text-sm"><i class="fas fa-link mr-2 text-xs"></i>Pair Now</a>
-                        <a href="plugins.html" class="block text-gray-400 hover:text-sky-400 transition text-sm"><i class="fas fa-puzzle-piece mr-2 text-xs"></i>Plugins</a>
-                        <a href="#commands" class="block text-gray-400 hover:text-sky-400 transition text-sm"><i class="fas fa-terminal mr-2 text-xs"></i>Commands</a>
-                        <a href="#faq" class="block text-gray-400 hover:text-sky-400 transition text-sm"><i class="fas fa-question-circle mr-2 text-xs"></i>FAQ</a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="text-white font-bold text-base mb-4">Connect</h4>
-                    <div class="space-y-2">
-                        <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" rel="noopener" class="block text-gray-400 hover:text-green-400 transition text-sm"><i class="fab fa-whatsapp mr-2 text-xs"></i>Updates Channel</a>
-                        <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" rel="noopener" class="block text-gray-400 hover:text-sky-400 transition text-sm"><i class="fab fa-github mr-2 text-xs"></i>GitHub</a>
-                        <a href="https://ali-md-host.vercel.app" target="_blank" rel="noopener" class="block text-gray-400 hover:text-purple-400 transition text-sm"><i class="fas fa-server mr-2 text-xs"></i>VPS Host</a>
-                        <button id="owner-link-footer" class="block text-gray-400 hover:text-sky-400 transition text-sm"><i class="fas fa-envelope mr-2 text-xs"></i>Contact Developer</button>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t border-white/10 pt-8 text-center">
-                <p class="text-gray-400 text-xs">© <span id="year">2026</span> <span class="hero-title-gradient font-bold">ALI-MD</span> · All rights reserved · Made with <i class="fas fa-heart text-sky-500 text-xs"></i> for the community</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- ══════════ OWNER MODAL ══════════ -->
-    <div id="owner-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" id="modal-backdrop"></div>
-        <div class="modal-advanced w-full max-w-md mx-auto rounded-3xl relative z-10 p-8 text-center">
-            <button id="close-modal" aria-label="Close" class="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl transition leading-none">&times;</button>
-            <img src="https://avatars.githubusercontent.com/u/105071373?v=4" alt="Owner" class="w-24 h-24 rounded-full mx-auto mb-5 border-4 border-sky-500/60 shadow-2xl">
-            <h3 class="text-2xl font-bold text-white mb-1">ALI INXIDE</h3>
-            <p class="text-sky-400 text-sm font-semibold mb-6">WhatsApp Bot Developer</p>
-            <div class="text-left space-y-3">
-                <a href="https://wa.me/923197521693" target="_blank" rel="noopener" class="flex items-center p-4 glass-effect rounded-xl hover:bg-white/10 transition">
-                    <i class="fab fa-whatsapp text-green-400 text-2xl mr-4 w-6"></i>
-                    <div>
-                        <p class="text-white font-semibold text-sm">WhatsApp</p>
-                        <p class="text-gray-400 text-xs">+92 319 752 1693</p>
-                    </div>
-                </a>
-                <a href="https://github.com/ALI-INXIDE" target="_blank" rel="noopener" class="flex items-center p-4 glass-effect rounded-xl hover:bg-white/10 transition">
-                    <i class="fab fa-github text-gray-300 text-2xl mr-4 w-6"></i>
-                    <div>
-                        <p class="text-white font-semibold text-sm">GitHub</p>
-                        <p class="text-gray-400 text-xs">ALI-INXIDE</p>
-                    </div>
-                </a>
-                <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" rel="noopener" class="flex items-center p-4 glass-effect rounded-xl hover:bg-white/10 transition">
-                    <i class="fas fa-bullhorn text-sky-400 text-2xl mr-4 w-6"></i>
-                    <div>
-                        <p class="text-white font-semibold text-sm">Updates Channel</p>
-                        <p class="text-gray-400 text-xs">Join for latest updates</p>
-                    </div>
-                </a>
             </div>
         </div>
     </div>
+</section>
 
-    <!-- ══════════ SCRIPT ══════════ -->
-    <script>
-        window.addEventListener('scroll', () => {
-            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 20);
+</main>
+
+<footer class="py-16 px-4 relative z-10" style="border-top:1px solid var(--border-color);">
+    <div class="container mx-auto">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-12 mb-12">
+            <div>
+                <div class="flex items-center space-x-3 mb-4">
+                    <img src="https://files.catbox.moe/up449y.jpg" alt="ALI-MD" class="w-12 h-12 rounded-full border-2 border-sky-500">
+                    <span class="text-2xl font-black hero-title-gradient" style="font-family:'Orbitron',sans-serif;">ALI-MD</span>
+                </div>
+                <p class="text-sm" style="color:var(--text-muted);">The best free WhatsApp bot. No panel, no server — just pair and run.</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-base mb-4" style="color:var(--text-primary);">Quick Links</h4>
+                <div class="space-y-2">
+                    <a href="./pair" class="block text-sm" style="color:var(--text-muted);"><i class="fas fa-link mr-2" style="font-size:10px;"></i>Pair Now</a>
+                    <a href="./plugins" class="block text-sm" style="color:var(--text-muted);"><i class="fas fa-puzzle-piece mr-2" style="font-size:10px;"></i>Plugins</a>
+                    <a href="#faq" class="block text-sm" style="color:var(--text-muted);"><i class="fas fa-question-circle mr-2" style="font-size:10px;"></i>FAQ</a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold text-base mb-4" style="color:var(--text-primary);">Connect</h4>
+                <div class="space-y-2">
+                    <a href="https://whatsapp.com/channel/0029VaoRxGmJpe8lgCqT1T2h" target="_blank" class="block text-sm" style="color:var(--text-muted);"><i class="fab fa-whatsapp mr-2" style="font-size:10px;"></i>Updates Channel</a>
+                    <a href="https://github.com/ALI-INXIDE/ALI-MD" target="_blank" class="block text-sm" style="color:var(--text-muted);"><i class="fab fa-github mr-2" style="font-size:10px;"></i>GitHub</a>
+                    <button id="owner-link-footer" class="block text-sm" style="color:var(--text-muted);"><i class="fas fa-envelope mr-2" style="font-size:10px;"></i>Contact</button>
+                </div>
+            </div>
+        </div>
+        <div class="pt-8 text-center" style="border-top:1px solid var(--border-color);">
+            <p class="text-xs" style="color:var(--text-muted);">© <span id="year">2026</span> <span class="hero-title-gradient font-bold">ALI-MD</span> · All rights reserved</p>
+        </div>
+    </div>
+</footer>
+
+<a href="https://wa.me/923147725823" target="_blank" id="float-wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+<button id="scroll-top" aria-label="Top"><i class="fas fa-chevron-up"></i></button>
+
+<div id="audio-player" class="muted" title="Play/Pause">
+    <button id="audio-btn" aria-label="Audio">
+        <i class="fas fa-volume-mute" id="audio-icon"></i>
+    </button>
+    <div class="audio-info">
+        <span class="audio-label">Now Playing</span>
+        <span class="audio-title" id="audio-title">ALI-MD Theme</span>
+    </div>
+    <div class="audio-bars"><span></span><span></span><span></span><span></span></div>
+</div>
+<audio id="bg-audio" loop preload="none">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<div id="cookie-banner">
+    <div class="cookie-content">
+        <div class="cookie-text">
+            <i class="fas fa-cookie-bite"></i>
+            <p>We use cookies to enhance your experience. By continuing, you agree to our Privacy Policy.</p>
+        </div>
+        <div class="cookie-btns">
+            <button class="cookie-btn cookie-reject" id="cookie-reject">Reject</button>
+            <button class="cookie-btn cookie-accept" id="cookie-accept">Accept All</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container"></div>
+
+<div id="owner-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/90 backdrop-blur-sm" id="modal-backdrop"></div>
+    <div class="modal-advanced w-full max-w-md mx-auto rounded-3xl relative z-10 p-8 text-center">
+        <button id="close-modal" class="absolute top-4 right-4 text-3xl leading-none" style="color:var(--text-muted);">&times;</button>
+        <img src="https://files.catbox.moe/rawor0.jpg" alt="Owner" class="w-24 h-24 rounded-full mx-auto mb-5 border-4 border-sky-500/60">
+        <h3 class="text-2xl font-bold mb-1" style="color:var(--text-primary);">ALI INXIDE</h3>
+        <p class="text-sky-400 text-sm font-semibold mb-6">WhatsApp Bot Developer</p>
+        <div class="text-left space-y-3">
+            <a href="https://wa.me/923147725823" target="_blank" class="flex items-center p-4 glass-effect rounded-xl">
+                <i class="fab fa-whatsapp text-green-400 text-2xl mr-4"></i>
+                <div><p class="font-semibold text-sm" style="color:var(--text-primary);">WhatsApp</p><p class="text-xs" style="color:var(--text-muted);">ALI INXIDE</p></div>
+            </a>
+            <a href="https://github.com/ALI-INXIDE" target="_blank" class="flex items-center p-4 glass-effect rounded-xl">
+                <i class="fab fa-github text-2xl mr-4" style="color:var(--text-primary);"></i>
+                <div><p class="font-semibold text-sm" style="color:var(--text-primary);">GitHub</p><p class="text-xs" style="color:var(--text-muted);">ALI-INXIDE</p></div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ═══════════ THEME ═══════════ */
+function setTheme(theme) {
+    document.body.classList.toggle('light-mode', theme === 'light');
+    ['theme-icon', 'theme-icon-mobile'].forEach(id => {
+        const icon = document.getElementById(id);
+        if (!icon) return;
+        icon.classList.toggle('fa-moon', theme === 'dark');
+        icon.classList.toggle('fa-sun', theme === 'light');
+    });
+    localStorage.setItem('ali-md-theme', theme);
+}
+
+/* ═══════════ TOAST ═══════════ */
+function showToast(message, icon = 'fa-check-circle') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<i class="fas ${icon}" style="color:#0ea5e9;"></i> <span>${message}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.classList.add('hide');
+        setTimeout(() => toast.remove(), 400);
+    }, 3200);
+}
+
+/* ═══════════ INIT ═══════════ */
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('ali-md-theme') || 'dark';
+    setTheme(savedTheme);
+
+    // Theme toggles
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        const isLight = document.body.classList.contains('light-mode');
+        setTheme(isLight ? 'dark' : 'light');
+        showToast(isLight ? 'Dark mode activated 🌙' : 'Light mode activated ☀️', isLight ? 'fa-moon' : 'fa-sun');
+    });
+    document.getElementById('theme-toggle-mobile').addEventListener('click', () => {
+        const isLight = document.body.classList.contains('light-mode');
+        setTheme(isLight ? 'dark' : 'light');
+    });
+
+    // Loader
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.getElementById('loader').classList.add('hide');
+            showToast('Welcome to ALI-MD 🚀', 'fa-rocket');
+        }, 1500);
+    });
+
+    // Progress + Scroll top
+    const progressBar = document.getElementById('progress-bar');
+    const scrollTopBtn = document.getElementById('scroll-top');
+    window.addEventListener('scroll', () => {
+        document.getElementById('header').classList.toggle('scrolled', window.scrollY > 20);
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        progressBar.style.width = (docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0) + '%';
+        scrollTopBtn.classList.toggle('show', window.scrollY > 400);
+    });
+    scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // Mobile menu
+    const mobileMenuBtn = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('active');
+        const icon = mobileMenuBtn.querySelector('i');
+        icon.classList.toggle('fa-bars', !mobileMenu.classList.contains('active'));
+        icon.classList.toggle('fa-times', mobileMenu.classList.contains('active'));
+    });
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            mobileMenuBtn.querySelector('i').classList.add('fa-bars');
+            mobileMenuBtn.querySelector('i').classList.remove('fa-times');
         });
+    });
 
-        const mobileMenuBtn = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
+    // Owner modal
+    const ownerModal = document.getElementById('owner-modal');
+    const openOwnerBtns = [document.getElementById('owner-link-mobile'), document.getElementById('owner-link-footer')].filter(Boolean);
+    const closeModal = document.getElementById('close-modal');
+    const modalBackdrop = document.getElementById('modal-backdrop');
+    function openModal() { ownerModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+    function closeModalFn() { ownerModal.classList.add('hidden'); document.body.style.overflow = ''; }
+    openOwnerBtns.forEach(btn => btn.addEventListener('click', openModal));
+    if (closeModal) closeModal.addEventListener('click', closeModalFn);
+    if (modalBackdrop) modalBackdrop.addEventListener('click', closeModalFn);
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && !ownerModal.classList.contains('hidden')) closeModalFn();
+    });
 
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('active');
-            const icon = mobileMenuBtn.querySelector('i');
-            if (mobileMenu.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Video
+    const video = document.getElementById('heroVideo');
+    if (video) {
+        video.addEventListener('error', () => {
+            const container = video.closest('.video-container');
+            if (container) container.innerHTML = '<div style="padding:80px 20px;text-align:center;color:#7dd3fc;"><i class="fas fa-video-slash" style="font-size:48px;opacity:0.5;display:block;margin-bottom:20px;"></i><p>Video unavailable</p></div>';
+        });
+    }
+
+    // Audio
+    const bgAudio = document.getElementById('bg-audio');
+    const audioPlayer = document.getElementById('audio-player');
+    const audioBtn = document.getElementById('audio-btn');
+    const audioIcon = document.getElementById('audio-icon');
+    let audioStarted = false;
+
+    bgAudio.volume = 0.35;
+
+    function toggleAudio() {
+        if (bgAudio.paused) {
+            bgAudio.play().then(() => {
+                audioPlayer.classList.remove('muted');
+                audioBtn.classList.add('playing');
+                audioIcon.classList.remove('fa-volume-mute', 'fa-play');
+                audioIcon.classList.add('fa-volume-up');
+            }).catch(() => {});
+        } else {
+            bgAudio.pause();
+            audioPlayer.classList.add('muted');
+            audioBtn.classList.remove('playing');
+            audioIcon.classList.remove('fa-volume-up');
+            audioIcon.classList.add('fa-volume-mute');
+        }
+    }
+    audioPlayer.addEventListener('click', toggleAudio);
+
+    function tryAutoPlay() {
+        if (audioStarted) return;
+        audioStarted = true;
+        bgAudio.play().then(() => {
+            audioPlayer.classList.remove('muted');
+            audioBtn.classList.add('playing');
+            audioIcon.classList.remove('fa-volume-mute');
+            audioIcon.classList.add('fa-volume-up');
+        }).catch(() => {});
+    }
+    document.addEventListener('click', tryAutoPlay, { once: true });
+    document.addEventListener('touchstart', tryAutoPlay, { once: true });
+    document.addEventListener('scroll', tryAutoPlay, { once: true });
+
+    // Cookie
+    const cookieBanner = document.getElementById('cookie-banner');
+    const cookieAccepted = localStorage.getItem('ali-md-cookie');
+    setTimeout(() => {
+        if (!cookieAccepted) cookieBanner.classList.add('show');
+    }, 2200);
+
+    document.getElementById('cookie-accept').addEventListener('click', () => {
+        localStorage.setItem('ali-md-cookie', 'accepted');
+        cookieBanner.classList.remove('show');
+        showToast('Cookies accepted. Thank you! 🍪', 'fa-cookie-bite');
+    });
+    document.getElementById('cookie-reject').addEventListener('click', () => {
+        localStorage.setItem('ali-md-cookie', 'rejected');
+        cookieBanner.classList.remove('show');
+    });
+
+    // Stats
+    const statsObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateStat(entry.target);
+                statsObserver.unobserve(entry.target);
             }
         });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-number').forEach(el => statsObserver.observe(el));
 
-        document.querySelectorAll('.mobile-nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.remove('active');
-                const icon = mobileMenuBtn.querySelector('i');
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-            });
+    function animateStat(el) {
+        const target = parseFloat(el.getAttribute('data-target'));
+        const suffix = el.getAttribute('data-suffix') || '';
+        const isDecimal = target % 1 !== 0;
+        const startTime = performance.now();
+        const duration = 1600;
+        function tick(now) {
+            const progress = Math.min((now - startTime) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = target * eased;
+            el.textContent = (isDecimal ? current.toFixed(1) : Math.floor(current)) + suffix;
+            if (progress < 1) requestAnimationFrame(tick);
+            else el.textContent = (isDecimal ? target.toFixed(1) : target) + suffix;
+        }
+        requestAnimationFrame(tick);
+    }
+
+    // Commands filter
+    const searchInput = document.getElementById('commandSearch');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const commandCards = document.querySelectorAll('#commands-grid .premium-card');
+    const noResults = document.getElementById('noResults');
+    let activeFilter = 'all';
+
+    function filterCommands() {
+        const query = searchInput.value.toLowerCase().trim();
+        let visibleCount = 0;
+        commandCards.forEach(card => {
+            const category = card.getAttribute('data-category');
+            const name = (card.getAttribute('data-name') || '').toLowerCase();
+            const shouldShow = (activeFilter === 'all' || category === activeFilter) && (!query || name.includes(query));
+            card.style.display = shouldShow ? '' : 'none';
+            if (shouldShow) visibleCount++;
         });
-
-        const ownerModal = document.getElementById('owner-modal');
-        const openOwnerBtns = [
-            document.getElementById('owner-link'),
-            document.getElementById('owner-link-mobile'),
-            document.getElementById('owner-link-footer')
-        ].filter(Boolean);
-        const closeModal = document.getElementById('close-modal');
-        const modalBackdrop = document.getElementById('modal-backdrop');
-
-        function openModal() { 
-            ownerModal.classList.remove('hidden'); 
-            document.body.style.overflow = 'hidden'; 
-        }
-        function closeModalFn() { 
-            ownerModal.classList.add('hidden'); 
-            document.body.style.overflow = ''; 
-        }
-
-        openOwnerBtns.forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); openModal(); }));
-        if (closeModal) closeModal.addEventListener('click', closeModalFn);
-        if (modalBackdrop) modalBackdrop.addEventListener('click', closeModalFn);
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !ownerModal.classList.contains('hidden')) closeModalFn();
+        noResults.classList.toggle('hidden', visibleCount > 0);
+    }
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeFilter = btn.getAttribute('data-filter');
+            filterCommands();
         });
+    });
+    searchInput.addEventListener('input', filterCommands);
 
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        const video = document.getElementById('heroVideo');
-        if (video) {
-            video.addEventListener('error', () => {
-                const container = video.closest('.video-container');
-                if (container) {
-                    container.innerHTML = '<div style="padding:80px 20px;text-align:center;color:#7dd3fc;"><i class="fas fa-video-slash" style="font-size:48px;opacity:0.5;margin-bottom:20px;display:block;"></i><p>Video unavailable</p></div>';
-                }
-            });
-        }
-    </script>
+    // Card mouse glow
+    document.querySelectorAll('.premium-card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            card.style.setProperty('--mx', x + '%');
+            card.style.setProperty('--my', y + '%');
+        });
+    });
+});
+</script>
 </body>
 </html>
