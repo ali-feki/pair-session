@@ -733,6 +733,21 @@ details[open] summary::after { content: '\f068'; }
 }
 .bot-hero-image:hover { transform: translateY(-5px) scale(1.02); }
 
+/* ─── PARTICLES ANIMATION (NEW) ─── */
+.particle {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: floatUp linear infinite;
+    z-index: 0;
+}
+@keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
 @media (max-width: 768px) {
     .social-grid { grid-template-columns: repeat(2, 1fr); }
     .trust-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1278,6 +1293,25 @@ function showToast(message, icon = 'fa-check-circle') {
 
 /* ═══════════ INIT ═══════════ */
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // ─── PARTICLES ANIMATION (NEW) ───
+    const particleColors = ['rgba(14,165,233,0.5)', 'rgba(37,99,235,0.5)', 'rgba(34,211,238,0.4)'];
+    for (let i = 0; i < 25; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 6 + 2;
+        p.style.cssText = `
+            width:${size}px; height:${size}px;
+            background:${particleColors[Math.floor(Math.random()*3)]};
+            left:${Math.random()*100}%;
+            animation-duration:${Math.random()*20+15}s;
+            animation-delay:-${Math.random()*20}s;
+            box-shadow: 0 0 12px currentColor;
+        `;
+        document.body.appendChild(p);
+    }
+
+    // ─── EXISTING SCRIPTS ───
     const savedTheme = localStorage.getItem('ali-md-theme') || 'dark';
     setTheme(savedTheme);
 
